@@ -18,7 +18,7 @@ function(jQuery) {
 	 * Utility functionality to work with élements, e.g. iterate through aggregations, find parents, ...
 	 *
 	 * @author SAP SE
-	 * @version 1.30.0
+	 * @version 1.30.1
 	 *
 	 * @private
 	 * @static
@@ -82,6 +82,10 @@ function(jQuery) {
 			}
 
 			if (oElement.getMetadata().getClass() === oCore.ComponentContainer) {
+				//This happens when the compontentConainer has not been rendered yet
+				if (!oElement.getComponentInstance()) {
+					return;
+				}
 				internalFind(oElement.getComponentInstance().getAggregation("rootControl"));
 			} else {
 				aFoundElements.push(oElement);

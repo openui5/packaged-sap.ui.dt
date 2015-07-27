@@ -7,9 +7,10 @@
 // Provides class sap.ui.dt.plugin.ControlDragDrop.
 sap.ui.define([
 	'sap/ui/dt/plugin/DragDrop',
-	'sap/ui/dt/ElementUtil'
+	'sap/ui/dt/ElementUtil',
+	'sap/ui/dt/DOMUtil'
 ],
-function(DragDrop, ElementUtil) {
+function(DragDrop, ElementUtil, DOMUtil) {
 	"use strict";
 
 	/**
@@ -23,7 +24,7 @@ function(DragDrop, ElementUtil) {
 	 * @extends sap.ui.dt.plugin.DragDrop"
 	 *
 	 * @author SAP SE
-	 * @version 1.30.0
+	 * @version 1.30.1
 	 *
 	 * @constructor
 	 * @private
@@ -107,21 +108,8 @@ function(DragDrop, ElementUtil) {
 	 */
 	ControlDragDrop.prototype.onDragStart = function(oOverlay, oEvent) {
 		delete this._previousTarget;
-		this._oDraggedOverlay = oOverlay;
 
 		this._activateAllValidDroppables();
-
-		var oGhost = oOverlay.getAssociatedDomRef();
-		if (oGhost && oEvent && oEvent.originalEvent && oEvent.originalEvent.dataTransfer) {
-			oEvent.originalEvent.dataTransfer.setDragImage(oGhost, 0, 0);
-		}
-	};
-
-	/**
-	 * @public
-	 */
-	ControlDragDrop.prototype.getDraggedOverlay = function(oOverlay) {
-		return this._oDraggedOverlay;
 	};
 
 	/**
@@ -129,15 +117,13 @@ function(DragDrop, ElementUtil) {
 	 */
 	ControlDragDrop.prototype.onDragEnd = function(oOverlay) {
 		this._deactivateAllDroppables();
-		delete this._oDraggedOverlay;
 	};
-
 
 	/**
 	 * @override
 	 */
 	ControlDragDrop.prototype.onDragEnter = function(oTargetOverlay, oEvent) {
-		if (oTargetOverlay.getElementInstance() !== this._oDraggedOverlay.getElementInstance() && oTargetOverlay.getDomRef().outerHTML !== this._previousTarget) {
+		if (oTargetOverlay.getElementInstance() !== this.getDraggedOverlay().getElementInstance() && oTargetOverlay.getDomRef().outerHTML !== this._previousTarget) {
 			this._previousTarget = oTargetOverlay.getDomRef().outerHTML;
 			this._repositionOn(oTargetOverlay);
 		}
@@ -151,8 +137,8 @@ function(DragDrop, ElementUtil) {
 
 		var oParentElement = oAggregationOverlay.getElementInstance();
 
-		var oDraggedElement = this._oDraggedOverlay.getElementInstance();
-		var oParentOverlay = this._oDraggedOverlay.getParentOverlay();
+		var oDraggedElement = this.getDraggedOverlay().getElementInstance();
+		var oParentOverlay = this.getDraggedOverlay().getParentOverlay();
 
 		if (oParentElement !== oParentOverlay.getElementInstance()) {
 			var sAggregationName = oAggregationOverlay.getAggregationName();
@@ -181,7 +167,7 @@ function(DragDrop, ElementUtil) {
 	 */
 	ControlDragDrop.prototype.checkDroppable = function(oAggregationOverlay) {
 		var oParentElement = oAggregationOverlay.getElementInstance();
-		var oDraggedElement = this._oDraggedOverlay.getElementInstance();
+		var oDraggedElement = this.getDraggedOverlay().getElementInstance();
 		var sAggregationName = oAggregationOverlay.getAggregationName();
 
 		if (ElementUtil.isValidForAggregation(oParentElement, sAggregationName, oDraggedElement)) {
@@ -246,7 +232,7 @@ function(DragDrop, ElementUtil) {
 	 * @private
 	 */
 	ControlDragDrop.prototype._repositionOn = function(oTargetOverlay) {
-		var oDraggedElement = this._oDraggedOverlay.getElementInstance();
+		var oDraggedElement = this.getDraggedOverlay().getElementInstance();
 
 		var oTargetElement = oTargetOverlay.getElementInstance();
 		var oPublicParent = oTargetOverlay.getParentOverlay().getElementInstance();

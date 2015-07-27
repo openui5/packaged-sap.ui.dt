@@ -24,7 +24,7 @@ function(ManagedObject) {
 	 * @extends sap.ui.dt.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.30.0
+	 * @version 1.30.1
 	 *
 	 * @constructor
 	 * @private
