@@ -28,7 +28,7 @@ function(jQuery, Control, DOMUtil, ElementUtil, OverlayUtil) {
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.30.3
+	 * @version 1.30.4
 	 *
 	 * @constructor
 	 * @private

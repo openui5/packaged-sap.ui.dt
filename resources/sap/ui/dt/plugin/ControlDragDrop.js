@@ -24,7 +24,7 @@ function(DragDrop, ElementUtil, DOMUtil) {
 	 * @extends sap.ui.dt.plugin.DragDrop"
 	 *
 	 * @author SAP SE
-	 * @version 1.30.3
+	 * @version 1.30.4
 	 *
 	 * @constructor
 	 * @private
@@ -146,7 +146,7 @@ function(DragDrop, ElementUtil, DOMUtil) {
 
 		if (oTargetParentElement !== oSourceParentElement) {
 			var sAggregationName = oAggregationOverlay.getAggregationName();
-			ElementUtil.addAggregation(oSourceParentElement, sAggregationName, oDraggedElement);
+			ElementUtil.addAggregation(oTargetParentElement, sAggregationName, oDraggedElement);
 		}
 	};
 
