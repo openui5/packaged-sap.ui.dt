@@ -35,7 +35,7 @@ function(jQuery, Control, ControlObserver, ManagedObjectObserver, DesignTimeMeta
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.30.2
+	 * @version 1.30.3
 	 *
 	 * @constructor
 	 * @private
@@ -118,9 +118,7 @@ function(jQuery, Control, ControlObserver, ManagedObjectObserver, DesignTimeMeta
 				 */
 				selectionChange : {
 					parameters : {
-						selected : {
-							type : "boolean"
-						}
+						selected : { type : "boolean" }
 					}
 				},
 				/**
@@ -128,9 +126,7 @@ function(jQuery, Control, ControlObserver, ManagedObjectObserver, DesignTimeMeta
 				 */
 				draggableChange : {
 					parameters : {
-						selected : {
-							draggable : "boolean"
-						}
+						draggable : { type : "boolean" }
 					}
 				},
 				/**
@@ -138,10 +134,10 @@ function(jQuery, Control, ControlObserver, ManagedObjectObserver, DesignTimeMeta
 				 */
 				elementModified : {
 					parameters : {
-						type : "string",
-						value : "any",
-						oldValue : "any",
-						target : "sap.ui.core.Element"
+						type : { type : "string" },
+						value : { type : "any" },
+						oldValue : { type : "any" },
+						target : { type : "sap.ui.core.Element" }
 					}
 				}
 			}
@@ -354,13 +350,13 @@ function(jQuery, Control, ControlObserver, ManagedObjectObserver, DesignTimeMeta
 	 * @public
 	 */
 	Overlay.prototype.getDesignTimeMetadata = function() {
-		var oDesignTimeMetdata = this.getAggregation("designTimeMetadata");
-		if (!oDesignTimeMetdata && !this._oDefaultDesignTimeMetadata) {
+		var oDesignTimeMetadata = this.getAggregation("designTimeMetadata");
+		if (!oDesignTimeMetadata && !this._oDefaultDesignTimeMetadata) {
 			this._oDefaultDesignTimeMetadata = new DesignTimeMetadata({
-				data : this._getElementDesignTimeMetadata()
+				data : ElementUtil.getDesignTimeMetadata(this.getElementInstance())
 			});
 		}
-		return oDesignTimeMetdata || this._oDefaultDesignTimeMetadata;
+		return oDesignTimeMetadata || this._oDefaultDesignTimeMetadata;
 	};
 
 	/**
@@ -493,15 +489,6 @@ function(jQuery, Control, ControlObserver, ManagedObjectObserver, DesignTimeMeta
 			this._oDefaultDesignTimeMetadata.destroy();
 			this._oDefaultDesignTimeMetadata = null;
 		}
-	};
-
-	/**
-	 * @return {map} returns the design time metadata of the associated element
-	 * @private
-	 */
-	Overlay.prototype._getElementDesignTimeMetadata = function() {
-		var oElement = this.getElementInstance();
-		return oElement ? oElement.getMetadata().getDesignTime() : {};
 	};
 
 	/**

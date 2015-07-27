@@ -18,7 +18,7 @@ function(jQuery) {
 	 * Utility functionality to work with élements, e.g. iterate through aggregations, find parents, ...
 	 *
 	 * @author SAP SE
-	 * @version 1.30.2
+	 * @version 1.30.3
 	 *
 	 * @private
 	 * @static
@@ -243,6 +243,16 @@ function(jQuery) {
 			return false;
 		}
 	};		
+
+	/**
+	 * 
+	 */
+	ElementUtil.getDesignTimeMetadata = function(oElement) {
+		var oDTMetadata = oElement ? oElement.getMetadata().getDesignTime() : {};
+		return oDTMetadata || {};
+	};		
+
+	
 
 	return ElementUtil;
 }, /* bExport= */ true);

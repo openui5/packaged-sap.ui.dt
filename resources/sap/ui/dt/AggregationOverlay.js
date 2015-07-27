@@ -28,7 +28,7 @@ function(jQuery, Control, DOMUtil, ElementUtil, OverlayUtil) {
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.30.2
+	 * @version 1.30.3
 	 *
 	 * @constructor
 	 * @private
@@ -80,7 +80,7 @@ function(jQuery, Control, DOMUtil, ElementUtil, OverlayUtil) {
 				 */
 				droppableChange : {
 					parameters : {
-						droppable : "boolean"
+						droppable : { type : "boolean" }
 					}
 				}
 			}
