@@ -1,5 +1,5 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * UI development toolkit for HTML5 (OpenUI5)
  * (c) Copyright 2009-2015 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
@@ -19,7 +19,7 @@ function(jQuery, ElementUtil) {
 	 * Utility functionality for DOM
 	 *
 	 * @author SAP SE
-	 * @version 1.30.4
+	 * @version 1.30.5
 	 *
 	 * @private
 	 * @static
@@ -168,16 +168,22 @@ function(jQuery, ElementUtil) {
 	DOMUtil.copyComputedStyle = function(oSrc, oDest) {
 		var mStyles = this.getComputedStyles(oSrc);
 		for ( var sStyle in mStyles ) {
-			// Do not use `hasOwnProperty`, nothing will get copied
-			if ( typeof sStyle == "string" && sStyle != "cssText" && !/\d/.test(sStyle) && sStyle.indexOf("margin") === -1 ) {
-				oDest.style[sStyle] = mStyles[sStyle];
-				// `fontSize` comes before `font` If `font` is empty, `fontSize` gets
-				// overwritten.  So make sure to reset this property. (hackyhackhack)
-				// Other properties may need similar treatment
-				if ( sStyle == "font" ) {
-					oDest.style.fontSize = mStyles.fontSize;
+			try {
+				// Do not use `hasOwnProperty`, nothing will get copied
+				if ( typeof sStyle == "string" && sStyle != "cssText" && !/\d/.test(sStyle) && sStyle.indexOf("margin") === -1 ) {
+					oDest.style[sStyle] = mStyles[sStyle];
+					// `fontSize` comes before `font` If `font` is empty, `fontSize` gets
+					// overwritten.  So make sure to reset this property. (hackyhackhack)
+					// Other properties may need similar treatment
+					if ( sStyle == "font" ) {
+						oDest.style.fontSize = mStyles.fontSize;
+					}
 				}
+			/*eslint-disable no-empty */
+			} catch (exc) {
+				// readonly properties must not through an error
 			}
+			/*eslint-enable no-empty */
 		}
 	};
 
