@@ -35,7 +35,7 @@ function(jQuery, Control, ControlObserver, ManagedObjectObserver, DesignTimeMeta
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.30.5
+	 * @version 1.30.6
 	 *
 	 * @constructor
 	 * @private
