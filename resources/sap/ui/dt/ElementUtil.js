@@ -18,7 +18,7 @@ function(jQuery) {
 	 * Utility functionality to work with élements, e.g. iterate through aggregations, find parents, ...
 	 *
 	 * @author SAP SE
-	 * @version 1.30.6
+	 * @version 1.30.7
 	 *
 	 * @private
 	 * @static
@@ -153,6 +153,21 @@ function(jQuery) {
 		});
 
 		return bFiltered;
+	};
+
+	/**
+	 * 
+	 */
+	ElementUtil.findClosestControlInDom = function(oNode) {
+		if (oNode && oNode.getAttribute("data-sap-ui")) {
+			return sap.ui.getCore().byId(oNode.getAttribute("data-sap-ui"));
+		} else {
+			if (oNode.parentNode) {
+				this.findClosestControlInDom(oNode.parentNode);
+			} else {
+				return null;
+			}
+		}
 	};
 
 	/**

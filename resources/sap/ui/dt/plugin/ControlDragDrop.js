@@ -24,7 +24,7 @@ function(DragDrop, ElementUtil, DOMUtil) {
 	 * @extends sap.ui.dt.plugin.DragDrop"
 	 *
 	 * @author SAP SE
-	 * @version 1.30.6
+	 * @version 1.30.7
 	 *
 	 * @constructor
 	 * @private
@@ -65,7 +65,7 @@ function(DragDrop, ElementUtil, DOMUtil) {
 			this._activateValidDroppablesFor(oOverlay);
 		}
 	};
-
+	
 	/**
 	 * @private
 	 */
@@ -138,7 +138,7 @@ function(DragDrop, ElementUtil, DOMUtil) {
 		var oTargetParentElement = oAggregationOverlay.getElementInstance();
 
 		var oDraggedElement = this.getDraggedOverlay().getElementInstance();
-		var oSourceParentOverlay = this.getDraggedOverlay().getParentOverlay();
+		var oSourceParentOverlay = this.getDraggedOverlay().getParentElementOverlay();
 		var oSourceParentElement;
 		if (oSourceParentOverlay) {
 			oSourceParentElement = oSourceParentOverlay.getElementInstance();
@@ -239,7 +239,7 @@ function(DragDrop, ElementUtil, DOMUtil) {
 		var oDraggedElement = this.getDraggedOverlay().getElementInstance();
 
 		var oTargetElement = oTargetOverlay.getElementInstance();
-		var oPublicParent = oTargetOverlay.getParentOverlay().getElementInstance();
+		var oPublicParent = oTargetOverlay.getParentElementOverlay().getElementInstance();
 		var sPublicParentAggregationName = oTargetOverlay.getParentAggregationOverlay().getAggregationName();
 
 		var aChildren = ElementUtil.getAggregation(oPublicParent, sPublicParentAggregationName);

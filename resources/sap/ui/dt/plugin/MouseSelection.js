@@ -22,7 +22,7 @@ function(Plugin) {
 	 * @extends sap.ui.dt.Plugin
 	 *
 	 * @author SAP SE
-	 * @version 1.30.6
+	 * @version 1.30.7
 	 *
 	 * @constructor
 	 * @private
@@ -59,6 +59,7 @@ function(Plugin) {
 	 * @override
 	 */
 	MouseSelection.prototype.registerOverlay = function(oOverlay) {
+		oOverlay.setSelectable(true);
 		oOverlay.addEventDelegate(this._mEventDelegate, oOverlay);
 	};
 

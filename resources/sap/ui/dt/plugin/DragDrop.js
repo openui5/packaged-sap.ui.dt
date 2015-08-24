@@ -24,7 +24,7 @@ function(Plugin, DOMUtil) {
 	 * @extends sap.ui.dt.plugin.Plugin
 	 *
 	 * @author SAP SE
-	 * @version 1.30.6
+	 * @version 1.30.7
 	 *
 	 * @constructor
 	 * @private
@@ -210,6 +210,11 @@ function(Plugin, DOMUtil) {
 		this._oDraggedOverlay = oOverlay;
 
 		oEvent.stopPropagation();
+
+		// Fix for Firfox - Firefox only fires drag events when data is set
+		if (sap.ui.Device.browser.firefox && oEvent && oEvent.originalEvent && oEvent.originalEvent.dataTransfer && oEvent.originalEvent.dataTransfer.setData) {
+			oEvent.originalEvent.dataTransfer.setData('text/plain', '');		
+		}
 
 		this.showGhost(oOverlay, oEvent);		
 		this.onDragStart(oOverlay, oEvent);

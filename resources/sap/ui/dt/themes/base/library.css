@@ -49,6 +49,14 @@
 .sapUiDtOverlay {
   position: absolute;
 }
+.sapUiDtDummyScrollContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.sapUiDtOverlayDroppable {
+  outline: 1px dashed green;
+}
 .sapUiDtOverlaySelected {
   outline: 1px solid #35F;
 }
@@ -69,11 +77,5 @@
   padding-right: 500px;
   padding-bottom: 500px;
   bottom: -1000px;
-}
-.sapUiDtAggregationOverlay {
-  position: absolute;
-}
-.sapUiDtAggregationOverlayDroppable {
-  outline: 1px dashed green;
 }
 /* This CSS shares it rules with all other CSS of this library */
