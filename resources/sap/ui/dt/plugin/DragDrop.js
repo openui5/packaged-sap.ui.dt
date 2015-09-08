@@ -24,7 +24,7 @@ function(Plugin, DOMUtil) {
 	 * @extends sap.ui.dt.plugin.Plugin
 	 *
 	 * @author SAP SE
-	 * @version 1.32.0
+	 * @version 1.32.1
 	 *
 	 * @constructor
 	 * @private

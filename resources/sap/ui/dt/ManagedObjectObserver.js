@@ -6,9 +6,10 @@
 
 // Provides class sap.ui.dt.ManagedObjectObserver.
 sap.ui.define([
-	'sap/ui/base/ManagedObject'
+	'sap/ui/base/ManagedObject',
+	'sap/ui/dt/ElementUtil'
 ],
-function(ManagedObject) {
+function(ManagedObject, ElementUtil) {
 	"use strict";
 
 
@@ -23,7 +24,7 @@ function(ManagedObject) {
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.32.0
+	 * @version 1.32.1
 	 *
 	 * @constructor
 	 * @private
@@ -184,6 +185,7 @@ function(ManagedObject) {
 		this._fnOriginalAddAggregation = oTarget.addAggregation;
 		oTarget.addAggregation = function(sAggregationName, oObject, bSuppressInvalidate) {
 			that._fnOriginalAddAggregation.apply(this, arguments);
+			that._bAddAggregationCall = true;
 			that.fireModified({
 				type : "addAggregation",
 				value : oObject,
@@ -208,6 +210,7 @@ function(ManagedObject) {
 		this._fnOriginalInsertAggregation = oTarget.insertAggregation;
 		oTarget.insertAggregation = function(sAggregationName, oObject, iIndex, bSuppressInvalidate) {
 			that._fnOriginalInsertAggregation.apply(this, arguments);
+			that._bInsertAggregationCall = true;
 			that.fireModified({
 				type : "insertAggregation",
 				value : oObject,
@@ -242,6 +245,44 @@ function(ManagedObject) {
 			return this;
 		};		
 
+		that._aOriginalAddMutators = {};
+		that._aOriginalInsertMutators = {};
+		var mAllAggregations = oTarget.getMetadata().getAllAggregations();
+		Object.keys(mAllAggregations).forEach(function(sAggregationName) {
+			var oAggregation = mAllAggregations[sAggregationName];
+			var _fnOriginalAddMutator = oTarget[oAggregation._sMutator];
+			that._aOriginalAddMutators[oAggregation.name] = _fnOriginalAddMutator;
+			oTarget[oAggregation._sMutator] = function(oObject) {
+				that._bAddAggregationCall = false;
+				// if addAggregation method wasn't called directly
+				_fnOriginalAddMutator.apply(this, arguments);
+				if (!that._bAddAggregationCall) {
+					that.fireModified({
+						type : "addAggregation",
+						value : oObject,
+						target : this
+					});
+				}
+				return this;
+			};		
+
+			var _fnOriginalInsertMutator = oTarget[oAggregation._sInsertMutator];
+			that._aOriginalInsertMutators[oAggregation.name] = _fnOriginalInsertMutator;
+			oTarget[oAggregation._sInsertMutator] = function(oObject, iIndex) {
+				that._bInsertAggregationCall = false;
+				_fnOriginalInsertMutator.apply(this, arguments);
+				// if insertAggregation method wasn't called directly
+				if (!that._bInsertAggregationCall) {
+					that.fireModified({
+						type : "insertAggregation",
+						value : oObject,
+						target : this
+					});
+				}
+				return this;
+			};	
+		});
+
 	};
 
 	/**
@@ -250,6 +291,8 @@ function(ManagedObject) {
 	 * @protected
 	 */
 	ManagedObjectObserver.prototype.unobserve = function(oTarget) {
+		var that = this;
+
 		oTarget.destroy = this._fnOriginalDestroy;
 		delete this._fnOriginalDestroy;
 		oTarget.bindProperty = this._fnOriginalBindProperty;
@@ -273,6 +316,15 @@ function(ManagedObject) {
 		delete this._fnOriginalRemoveAllAggregations;
 		oTarget.destroyAggregation = this._fnOriginalDestroyAggregation;
 		delete this._fnOriginalDestroyAggregation;
+
+		var mAllAggregations = oTarget.getMetadata().getAllAggregations();
+		Object.keys(mAllAggregations).forEach(function(sAggregationName) {
+			var oAggregation = mAllAggregations[sAggregationName];
+			oTarget[oAggregation._sMutator] = that._aOriginalAddMutators[oAggregation.name];
+			oTarget[oAggregation._sInsertMutator] = that._aOriginalInsertMutators[oAggregation.name];
+		});
+		delete this._aOriginalAddMutators;
+		delete this._aOriginalInsertMutators;
 
 		oTarget.detachEvent("_change", this.fireModified, this);
 	};
