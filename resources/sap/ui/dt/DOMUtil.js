@@ -19,7 +19,7 @@ function(jQuery, ElementUtil) {
 	 * Utility functionality for DOM
 	 *
 	 * @author SAP SE
-	 * @version 1.32.1
+	 * @version 1.32.2
 	 *
 	 * @private
 	 * @static
