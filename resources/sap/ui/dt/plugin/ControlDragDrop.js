@@ -24,7 +24,7 @@ function(DragDrop, ElementUtil, DOMUtil) {
 	 * @extends sap.ui.dt.plugin.DragDrop"
 	 *
 	 * @author SAP SE
-	 * @version 1.32.2
+	 * @version 1.32.3
 	 *
 	 * @constructor
 	 * @private

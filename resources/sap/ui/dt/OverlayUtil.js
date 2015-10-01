@@ -20,7 +20,7 @@ function(jQuery, OverlayRegistry, ElementUtil) {
 	 * Utility functionality to work with overlays
 	 *
 	 * @author SAP SE
-	 * @version 1.32.2
+	 * @version 1.32.3
 	 *
 	 * @private
 	 * @static
