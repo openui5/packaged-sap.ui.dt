@@ -30,7 +30,7 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.30.9
+	 * @version 1.30.10
 	 *
 	 * @constructor
 	 * @private
@@ -116,6 +116,15 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 	 */
 	Overlay.prototype.init = function() {
 		this.attachBrowserEvent("scroll", this._onScroll, this);
+	};
+
+	/** 
+	 * this is needed to prevent UI5 renderManager from removing overlay's node from DOM in a rendering phase
+	 * see RenderManager.js "this._fPutIntoDom" function
+	 * @private
+	 */
+	Overlay.prototype._onChildRerenderedEmpty = function() {
+		return true;
 	};
 
 	/** 
