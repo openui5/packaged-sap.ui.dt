@@ -16,7 +16,7 @@ function(ManagedObject, ElementUtil) {
 	/**
 	 * Constructor for a new ManagedObjectObserver.
 	 *
-	 * @param {string} [sId] id for the new object, generated automatically if no id is given 
+	 * @param {string} [sId] id for the new object, generated automatically if no id is given
 	 * @param {object} [mSettings] initial settings for the new object
 	 *
 	 * @class
@@ -24,7 +24,7 @@ function(ManagedObject, ElementUtil) {
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.32.4
+	 * @version 1.32.5
 	 *
 	 * @constructor
 	 * @private
@@ -40,7 +40,7 @@ function(ManagedObject, ElementUtil) {
 			// ---- control specific ----
 			library : "sap.ui.dt",
 			properties : {
-				
+
 			},
 			associations : {
 				/**
@@ -80,7 +80,7 @@ function(ManagedObject, ElementUtil) {
 	ManagedObjectObserver.prototype.exit = function() {
 		var oTarget = this.getTargetInstance();
 		if (oTarget) {
-			this.unobserve(oTarget);	
+			this.unobserve(oTarget);
 		}
 	};
 
@@ -92,14 +92,14 @@ function(ManagedObject, ElementUtil) {
 	ManagedObjectObserver.prototype.setTarget = function(vTarget) {
 		var oOldTarget = this.getTargetInstance();
 		if (oOldTarget) {
-			this.unobserve(oOldTarget);	
+			this.unobserve(oOldTarget);
 		}
 
 		this.setAssociation("target", vTarget);
 
 		var oTarget = this.getTargetInstance();
 		if (oTarget) {
-			this.observe(oTarget);	
+			this.observe(oTarget);
 		}
 
 		return this;
@@ -253,7 +253,7 @@ function(ManagedObject, ElementUtil) {
 				target : this
 			});
 			return vOriginalReturn;
-		};		
+		};
 
 		that._aOriginalAddMutators = {};
 		that._aOriginalInsertMutators = {};
@@ -265,7 +265,23 @@ function(ManagedObject, ElementUtil) {
 			oTarget[oAggregation._sMutator] = function(oObject) {
 				that._bAddAggregationCall = false;
 				// if addAggregation method wasn't called directly
-				var vOriginalReturn = _fnOriginalAddMutator.apply(this, arguments);
+
+				var vOriginalReturn;
+				// if the mutator is overwritten and inside of the mutator control is temporary detached from root control tree,
+				// overlay destruction should be prevented. For instance, if the label is inserted to SimpleForm content,
+				// it will be added to a hidden FormElement, which has no parent (yet) at this moment we should prevent destuction of the overlay
+				// look SimpleFormInDesignTime.qunit for test
+				if (oObject && typeof oObject === 'object') {
+					oObject.__bSapUiDtSupressOverlayDestroy = true;
+				}
+				try {
+					vOriginalReturn = _fnOriginalAddMutator.apply(this, arguments);
+				} finally {
+					if (oObject && typeof oObject === 'object') {
+						delete oObject.__bSapUiDtSupressOverlayDestroy;
+					}
+				}
+
 				if (!that._bAddAggregationCall) {
 					that.fireModified({
 						type : "addAggregation",
@@ -274,13 +290,26 @@ function(ManagedObject, ElementUtil) {
 					});
 				}
 				return vOriginalReturn;
-			};		
+			};
 
 			var _fnOriginalInsertMutator = oTarget[oAggregation._sInsertMutator];
 			that._aOriginalInsertMutators[oAggregation.name] = _fnOriginalInsertMutator;
 			oTarget[oAggregation._sInsertMutator] = function(oObject, iIndex) {
 				that._bInsertAggregationCall = false;
-				var vOriginalReturn = _fnOriginalInsertMutator.apply(this, arguments);
+
+				var vOriginalReturn;
+				if (oObject && typeof oObject === 'object') {
+					oObject.__bSapUiDtSupressOverlayDestroy = true;
+				}
+				try {
+					vOriginalReturn = _fnOriginalInsertMutator.apply(this, arguments);
+				} finally {
+					if (oObject && typeof oObject === 'object') {
+						delete oObject.__bSapUiDtSupressOverlayDestroy;
+					}
+				}
+
+
 				// if insertAggregation method wasn't called directly
 				if (!that._bInsertAggregationCall) {
 					that.fireModified({
@@ -290,7 +319,7 @@ function(ManagedObject, ElementUtil) {
 					});
 				}
 				return vOriginalReturn;
-			};	
+			};
 		});
 
 	};

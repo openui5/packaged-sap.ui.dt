@@ -32,7 +32,7 @@ function(jQuery, Overlay, ControlObserver, ManagedObjectObserver, DesignTimeMeta
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.32.4
+	 * @version 1.32.5
 	 *
 	 * @constructor
 	 * @private
