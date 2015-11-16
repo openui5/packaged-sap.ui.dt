@@ -29,7 +29,7 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, DesignTimeMe
 	 * @extends sap.ui.core.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.32.5
+	 * @version 1.32.6
 	 *
 	 * @constructor
 	 * @private
@@ -438,7 +438,7 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, DesignTimeMe
 	 */
 	DesignTime.prototype._onElementModified = function(oEvent) {
 		var oParams = oEvent.getParameters();
-		if (oParams.type === "addAggregation" || oParams.type === "insertAggregation") {
+		if (oParams.type === "addOrSetAggregation" || oParams.type === "insertAggregation") {
 			this._onOverlayElementAddAggregation(oParams.value);
 		} else if (oParams.type === "setParent") {
 			this._onOverlayElementSetParent(oParams.target, oParams.value);
