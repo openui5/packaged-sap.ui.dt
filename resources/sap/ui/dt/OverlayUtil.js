@@ -15,7 +15,7 @@ sap.ui.define([
 	 *
 	 * @class Utility functionality to work with overlays
 	 * @author SAP SE
-	 * @version 1.34.0
+	 * @version 1.34.1
 	 * @private
 	 * @static
 	 * @since 1.30
@@ -103,7 +103,8 @@ sap.ui.define([
 				position: {
 					left: minLeft,
 					top: minTop
-				}
+				},
+				visible : true
 			};
 		}
 	};

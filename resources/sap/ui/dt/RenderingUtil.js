@@ -13,12 +13,12 @@ function(jQuery) {
 
 	/**
 	 * Class for RenderingUtil.
-	 * 
+	 *
 	 * @class
 	 * Utility functionality to work with élements, e.g. iterate through aggregations, find parents, ...
 	 *
 	 * @author SAP SE
-	 * @version 1.34.0
+	 * @version 1.34.1
 	 *
 	 * @private
 	 * @static
@@ -30,9 +30,14 @@ function(jQuery) {
 	var RenderingUtil = {};
 
 	/**
-	 * 
+	 *
 	 */
 	RenderingUtil.renderOverlay = function(oRm, oOverlay, sClassName) {
+		var oGeometry = oOverlay.getGeometry();
+		if (!oOverlay.isVisible() || !oGeometry || !oGeometry.visible) {
+			return;
+		}
+
 		if (oOverlay.getDomRef()) {
 			this._triggerOnAfterRenderingWithoutRendering(oRm, oOverlay);
 
@@ -57,7 +62,7 @@ function(jQuery) {
 		this._renderChildren(oRm, oOverlay);
 
 		oRm.write("</div>");
-	};		
+	};
 
 	/**
 	 */
@@ -65,9 +70,9 @@ function(jQuery) {
 		var aChildrenOverlays = oOverlay.getChildren();
 		aChildrenOverlays.forEach(function(oChildOverlay) {
 			oRm.renderControl(oChildOverlay);
-		});	
+		});
 	};
-	
+
 	/**
 	 */
 	RenderingUtil._triggerOnAfterRenderingWithoutRendering = function(oRm, oOverlay) {

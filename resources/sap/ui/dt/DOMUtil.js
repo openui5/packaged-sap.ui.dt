@@ -18,7 +18,7 @@ function(jQuery) {
 	 * Utility functionality for DOM
 	 *
 	 * @author SAP SE
-	 * @version 1.34.0
+	 * @version 1.34.1
 	 *
 	 * @private
 	 * @static
@@ -104,7 +104,8 @@ function(jQuery) {
 			return {
 				domRef : oDomRef,
 				size : this.getSize(oDomRef),
-				position :  jQuery(oDomRef).offset()
+				position :  jQuery(oDomRef).offset(),
+				visible : this.isVisible(oDomRef)
 			};
 		}
 	};
@@ -145,6 +146,15 @@ function(jQuery) {
 			return document.querySelector(sCSSSelector.replace(":sap-domref", "#" + this.getEscapedString(oDomRef.id)));
 		}
 		return oDomRef ? oDomRef.querySelector(sCSSSelector) : undefined;
+	};
+
+	/**
+	 *
+	 */
+	DOMUtil.isVisible = function(oDomRef) {
+		oDomRef = jQuery(oDomRef);
+
+		return oDomRef.is(":visible");
 	};
 
 	/**
@@ -247,15 +257,21 @@ function(jQuery) {
 	/**
 	 *
 	 */
-	DOMUtil.copyComputedStylesForDOM = function(oSrc, oDest) {
+	DOMUtil._copyComputedStylesAndCleanUp = function(oSrc, oDest) {
 		oSrc = jQuery(oSrc).get(0);
 		oDest = jQuery(oDest).get(0);
 
 		for (var i = 0; i < oSrc.children.length; i++) {
-			this.copyComputedStylesForDOM(oSrc.children[i], oDest.children[i]);
+			this._copyComputedStylesAndCleanUp(oSrc.children[i], oDest.children[i]);
 		}
+
 		// we shouldn't copy classes because they can affect styling
 		jQuery(oDest).removeClass();
+		// remove all special attributes, which can affect app behaviour
+		jQuery(oDest).attr("id", "");
+		jQuery(oDest).attr("role", "");
+		jQuery(oDest).attr("data-sap-ui", "");
+
 		jQuery(oDest).attr("tabIndex", -1);
 		this.copyComputedStyle(oSrc, oDest);
 	};
@@ -268,7 +284,7 @@ function(jQuery) {
 		oTarget = jQuery(oTarget).get(0);
 
 		var oCopy = oNode.cloneNode(true);
-		this.copyComputedStylesForDOM(oNode, oCopy);
+		this._copyComputedStylesAndCleanUp(oNode, oCopy);
 
 		var $copy = jQuery(oCopy);
 
