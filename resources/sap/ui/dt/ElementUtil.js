@@ -13,12 +13,12 @@ function(jQuery) {
 
 	/**
 	 * Class for ElementUtil.
-	 * 
+	 *
 	 * @class
 	 * Utility functionality to work with élements, e.g. iterate through aggregations, find parents, ...
 	 *
 	 * @author SAP SE
-	 * @version 1.30.10
+	 * @version 1.30.11
 	 *
 	 * @private
 	 * @static
@@ -30,7 +30,7 @@ function(jQuery) {
 	var ElementUtil = {};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.iterateOverAllPublicAggregations = function(oElement, fnCallback) {
 		var mAggregations = oElement.getMetadata().getAllAggregations();
@@ -46,7 +46,7 @@ function(jQuery) {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.getElementInstance = function(vElement) {
 		if (typeof vElement === "string") {
@@ -57,7 +57,7 @@ function(jQuery) {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.hasAncestor = function(oElement, oAncestor) {
 		var oParent = oElement;
@@ -69,7 +69,7 @@ function(jQuery) {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.findAllPublicElements = function(oElement) {
 		var aFoundElements = [];
@@ -108,10 +108,10 @@ function(jQuery) {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.getDomRef = function(oElement) {
-		if (oElement) { 
+		if (oElement) {
 			var oDomRef;
 			if (oElement.getDomRef) {
 				oDomRef = oElement.getDomRef();
@@ -124,7 +124,7 @@ function(jQuery) {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.findAllPublicChildren = function(oElement) {
 		var aFoundElements = this.findAllPublicElements(oElement);
@@ -137,7 +137,7 @@ function(jQuery) {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.isElementFiltered = function(oControl, aType) {
 		var that = this;
@@ -156,7 +156,7 @@ function(jQuery) {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.findClosestControlInDom = function(oNode) {
 		if (oNode && oNode.getAttribute("data-sap-ui")) {
@@ -171,7 +171,7 @@ function(jQuery) {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.getAggregationMutators = function(oElement, sAggregationName) {
 		var oMetadata = oElement.getMetadata();
@@ -186,7 +186,7 @@ function(jQuery) {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.getAggregation = function(oElement, sAggregationName) {
 		var sGetMutator = this.getAggregationMutators(oElement, sAggregationName).get;
@@ -201,17 +201,17 @@ function(jQuery) {
 		/*eslint-enable no-nested-ternary */
 		return oValue;
 	};
-	
+
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.addAggregation = function(oParent, sAggregationName, oElement) {
 		var sAggregationAddMutator = this.getAggregationMutators(oParent, sAggregationName).add;
 		oParent[sAggregationAddMutator](oElement);
 	};
-	
+
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.removeAggregation = function(oParent, sAggregationName, oElement) {
 		var sAggregationRemoveMutator = this.getAggregationMutators(oParent, sAggregationName).remove;
@@ -219,7 +219,7 @@ function(jQuery) {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.insertAggregation = function(oParent, sAggregationName, oElement, iIndex) {
 		if (this.getAggregation(oParent, sAggregationName).indexOf(oElement) !== -1) {
@@ -228,7 +228,9 @@ function(jQuery) {
 			// setParent event with parent null, private flag is set.
 			oElement.__bSapUiDtSupressParentChangeEvent = true;
 			try {
-				this.removeAggregation(oParent, sAggregationName, oElement);
+				// invalidate should be supressed, because if the controls have some checks and sync on invalidate,
+				// internal structure can be also removed (SimpleForm invalidate destroyed all content temporary)
+				oParent.removeAggregation(sAggregationName, oElement, true);
 			} finally {
 				delete oElement.__bSapUiDtSupressParentChangeEvent;
 			}
@@ -238,7 +240,7 @@ function(jQuery) {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.isValidForAggregation = function(oParent, sAggregationName, oElement) {
 		var oAggregationMetadata = oParent.getMetadata().getAggregation(sAggregationName);
@@ -248,7 +250,7 @@ function(jQuery) {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.isInstanceOf = function(oElement, sType) {
 		var oInstance = jQuery.sap.getObject(sType);
@@ -257,17 +259,17 @@ function(jQuery) {
 		} else {
 			return false;
 		}
-	};		
+	};
 
 	/**
-	 * 
+	 *
 	 */
 	ElementUtil.getDesignTimeMetadata = function(oElement) {
 		var oDTMetadata = oElement ? oElement.getMetadata().getDesignTime() : {};
 		return oDTMetadata || {};
-	};		
+	};
 
-	
+
 
 	return ElementUtil;
 }, /* bExport= */ true);
