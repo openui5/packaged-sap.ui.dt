@@ -1,6 +1,6 @@
 /*!
  * UI development toolkit for HTML5 (OpenUI5)
- * (c) Copyright 2009-2015 SAP SE or an SAP affiliate company.
+ * (c) Copyright 2009-2016 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
@@ -15,7 +15,7 @@ function(ManagedObject) {
 	/**
 	 * Constructor for a new Selection.
 	 *
-	 * @param {string} [sId] id for the new object, generated automatically if no id is given 
+	 * @param {string} [sId] id for the new object, generated automatically if no id is given
 	 * @param {object} [mSettings] initial settings for the new object
 	 *
 	 * @class
@@ -24,7 +24,7 @@ function(ManagedObject) {
 	 * @extends sap.ui.dt.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.34.1
+	 * @version 1.34.2
 	 *
 	 * @constructor
 	 * @private
@@ -42,7 +42,7 @@ function(ManagedObject) {
 				"mode" : {
 					type : "sap.ui.dt.SelectionMode",
 					defaultValue : sap.ui.dt.SelectionMode.Single
-				}				
+				}
 			},
 			associations : {},
 			aggregations : {},
@@ -87,7 +87,7 @@ function(ManagedObject) {
 		} else {
 			this.remove(oOverlay);
 		}
-	};	
+	};
 
 	/**
 	 * @public
@@ -99,7 +99,7 @@ function(ManagedObject) {
 		this.fireChange({
 			selection : this.getSelection()
 		});
-	};		
+	};
 
 	/**
 	 * @public
@@ -114,14 +114,14 @@ function(ManagedObject) {
 		this.fireChange({
 			selection : this.getSelection()
 		});
-	};	
+	};
 
 	/**
 	 * @private
 	 */
 	Selection.prototype._isSingleMode = function() {
 		return this.getMode() === sap.ui.dt.SelectionMode.Single;
-	};	
+	};
 
 
 	Selection.prototype._syncSelectionWithMode = function() {

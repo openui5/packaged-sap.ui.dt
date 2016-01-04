@@ -1,6 +1,6 @@
 /*
  * ! UI development toolkit for HTML5 (OpenUI5)
- * (c) Copyright 2009-2015 SAP SE or an SAP affiliate company.
+ * (c) Copyright 2009-2016 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
@@ -12,13 +12,13 @@ sap.ui.define([
 
 	/**
 	 * Constructor for a new ControlDragDrop.
-	 * 
+	 *
 	 * @param {string} [sId] id for the new object, generated automatically if no id is given
 	 * @param {object} [mSettings] initial settings for the new object
 	 * @class The ControlDragDrop enables D&D functionality for the overlays based on aggregation types
 	 * @extends sap.ui.dt.plugin.DragDrop"
 	 * @author SAP SE
-	 * @version 1.34.1
+	 * @version 1.34.2
 	 * @constructor
 	 * @private
 	 * @since 1.30
@@ -107,7 +107,7 @@ sap.ui.define([
 
 	/**
 	 * returns the dragged overlay (only during drag&drop)
-	 * 
+	 *
 	 * @public
 	 * @return {sap.ui.dt.Overlay} overlays which is dragged
 	 */
