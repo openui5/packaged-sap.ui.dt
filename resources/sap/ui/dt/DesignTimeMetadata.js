@@ -1,6 +1,6 @@
 /*!
  * UI development toolkit for HTML5 (OpenUI5)
- * (c) Copyright 2009-2015 SAP SE or an SAP affiliate company.
+ * (c) Copyright 2009-2016 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
@@ -16,7 +16,7 @@ function(jQuery, ManagedObject) {
 	/**
 	 * Constructor for a new DesignTimeMetadata.
 	 *
-	 * @param {string} [sId] id for the new object, generated automatically if no id is given 
+	 * @param {string} [sId] id for the new object, generated automatically if no id is given
 	 * @param {object} [mSettings] initial settings for the new object
 	 *
 	 * @class
@@ -24,7 +24,7 @@ function(jQuery, ManagedObject) {
 	 * @extends sap.ui.core.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.32.9
+	 * @version 1.32.10
 	 *
 	 * @constructor
 	 * @private
@@ -100,7 +100,7 @@ function(jQuery, ManagedObject) {
 			visible : true,
 			needDelegateFromParent : false
 		}, oData);
-	};	
+	};
 
 	/**
 	 * Returns a name defined in the DT metadata
@@ -167,7 +167,7 @@ function(jQuery, ManagedObject) {
 	 */
 	DesignTimeMetadata.prototype.getAggregationDomRef = function(sAggregationName) {
 		return this.getAggregation(sAggregationName).domRef;
-	};	
+	};
 
 	return DesignTimeMetadata;
 }, /* bExport= */ true);

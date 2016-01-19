@@ -1,6 +1,6 @@
 /*!
  * UI development toolkit for HTML5 (OpenUI5)
- * (c) Copyright 2009-2015 SAP SE or an SAP affiliate company.
+ * (c) Copyright 2009-2016 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
@@ -15,12 +15,12 @@ function(Element) {
 
 	/**
 	 * Class for Preloader.
-	 * 
+	 *
 	 * @class
 	 * Preloader for design time metadata.
 	 *
 	 * @author SAP SE
-	 * @version 1.32.9
+	 * @version 1.32.10
 	 *
 	 * @private
 	 * @static
@@ -76,7 +76,7 @@ function(Element) {
 				if (mLib.hasOwnProperty(sClassName)) {
 					aControlsToLoad.push(sLibraryName + "." + sClassName);
 				}
-			}	
+			}
 		});
 		return this.load(aControlsToLoad);
 	};
