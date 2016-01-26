@@ -25,7 +25,7 @@ function(jQuery, ManagedObjectObserver, DOMUtil) {
 	 * @extends sap.ui.dt.ManagedObjectObserver
 	 *
 	 * @author SAP SE
-	 * @version 1.34.2
+	 * @version 1.34.3
 	 *
 	 * @constructor
 	 * @private
@@ -130,7 +130,8 @@ function(jQuery, ManagedObjectObserver, DOMUtil) {
 			this._oMutationObserver.observe(oDomRef, {
 				childList : true,
 				subtree : true,
-				attributes : true
+				attributes : true,
+				characterData : true // also observe text node changes, see https://dom.spec.whatwg.org/#characterdata
 			});
 		}
 	};

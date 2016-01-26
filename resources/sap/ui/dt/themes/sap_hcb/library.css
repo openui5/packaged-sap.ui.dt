@@ -100,8 +100,6 @@
 }
 #overlay-container {
   position: fixed;
-  top: 0;
-  left: 0;
 }
 .sapUiDtDragGhostWrapper {
   position: fixed;
@@ -109,7 +107,7 @@
 }
 /* fix for chrome */
 .sap-desktop[data-sap-ui-browser^="cr"] .sapUiDtDragGhostWrapper {
-  padding-right: 500px;
+  padding-left: -500px;
   padding-bottom: 500px;
   bottom: -1000px;
 }
