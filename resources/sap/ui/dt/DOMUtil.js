@@ -18,7 +18,7 @@ function(jQuery) {
 	 * Utility functionality for DOM
 	 *
 	 * @author SAP SE
-	 * @version 1.36.0
+	 * @version 1.36.1
 	 *
 	 * @private
 	 * @static
