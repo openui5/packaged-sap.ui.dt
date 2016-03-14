@@ -23,7 +23,7 @@ function(Plugin, ElementUtil) {
 	 * @extends sap.ui.dt.Plugin
 	 *
 	 * @author SAP SE
-	 * @version 1.32.12
+	 * @version 1.32.13
 	 *
 	 * @constructor
 	 * @private
