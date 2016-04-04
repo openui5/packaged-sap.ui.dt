@@ -20,7 +20,7 @@ function(Element) {
 	 * Preloader for design time metadata.
 	 *
 	 * @author SAP SE
-	 * @version 1.36.5
+	 * @version 1.36.6
 	 *
 	 * @private
 	 * @static
