@@ -15,7 +15,7 @@ sap.ui.define([
 	 *
 	 * @class Utility functionality to work with overlays
 	 * @author SAP SE
-	 * @version 1.36.6
+	 * @version 1.36.7
 	 * @private
 	 * @static
 	 * @since 1.30
