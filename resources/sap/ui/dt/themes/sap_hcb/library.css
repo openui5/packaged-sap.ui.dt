@@ -76,50 +76,9 @@
   pointer-events: none !important;
 }
 /* This CSS shares it rules with all other CSS of this library */
+/* ============================== */
 /* Global CSS for 'sap_hcb' theme */
-/* Background Colors */
-/* Foreground Colors */
-/* Semantic Colors */
-/* Shadow Color */
-/* StandardListItem */
-/* ==================================== */
-/* Font styling                         */
-/* ==================================== */
-/* ==================================== */
-/* Chart Colors                         */
-/* ==================================== */
-/* Semantic Chart Colors */
-/* Note Explicit UX decision not to derive from @sapUiCritical, ... */
-/* Accent Chart Colors */
-/* Sequential Chart Colors */
-/* Derived Chart Colors */
-/* Shell */
-/* NotificationBar */
-/* ToolPopup */
-/* RatingIndicator */
-/* DateTimeInput Custom Picker JavaScript	  */
-/* mixed, scroller, clickpick */
-/* mixed, scroller, clickpick */
-/* modal, bubble, bottom, top */
-/* modal, bubble, bottom, top */
-/* Toolbar Separator */
-/* ------------------------------------------------------------------- */
-/* Generic Mapping: not for usage in standard control development !!!! */
-/* ------------------------------------------------------------------- */
-/* Semantic Text Colors */
-/* Semantic Element Colors */
-/* Semantic Backgrounds */
-/* Background Brand */
-/* Text Colors */
-/* Border Colors */
-/* @sapUiLightBorder: @sapHCStandardFG; */
-/* @sapUiExtraLightBorder: @sapHCStandardFG; */
-/* Accent */
-/* Backgrounds Header/Footer */
-/* Background */
-/* SAP.ME */
-/* OverlapCalendar Event Type */
-/* Calendar Legend */
+/* ============================== */
 .sapUiDtOverlay:focus:before {
   border-style: dashed;
 }
