@@ -21,14 +21,14 @@ function(jQuery) {
 	 * @namespace
 	 * @name sap.ui.dt
 	 * @author SAP SE
-	 * @version 1.40.0
+	 * @version 1.40.1
 	 * @private
 	 */
 
 	// delegate further initialization of this library to the Core
 	sap.ui.getCore().initLibrary({
 		name : "sap.ui.dt",
-		version: "1.40.0",
+		version: "1.40.1",
 		dependencies : ["sap.ui.core"],
 		types: [
 			"sap.ui.dt.SelectionMode"

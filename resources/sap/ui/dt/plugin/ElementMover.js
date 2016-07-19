@@ -20,7 +20,7 @@ sap.ui.define(['sap/ui/base/ManagedObject', 'sap/ui/dt/ElementUtil', 'sap/ui/dt/
 	 * @class The ElementMover enables movement of UI5 elements based on aggregation types, which can be used by drag and
 	 *        drop or cut and paste behavior.
 	 * @author SAP SE
-	 * @version 1.40.0
+	 * @version 1.40.1
 	 * @constructor
 	 * @private
 	 * @since 1.34
@@ -60,7 +60,9 @@ sap.ui.define(['sap/ui/base/ManagedObject', 'sap/ui/dt/ElementUtil', 'sap/ui/dt/
 	};
 
 	/**
+	 * Predicate to compute movability of an type
 	 * @public
+	 * @return true if type is movable, false otherwise
 	 */
 	ElementMover.prototype.isMovableType = function(oElement) {
 		var aMovableTypes = this._getMovableTypes();
@@ -246,17 +248,17 @@ sap.ui.define(['sap/ui/base/ManagedObject', 'sap/ui/dt/ElementUtil', 'sap/ui/dt/
 		var oTarget = OverlayUtil.getParentInformation(oMovedOverlay);
 
 		var oMove = this.getCommandFactory().getCommandFor(oTarget.parent, "Move", {
-			movedElement : oMovedElement
-		});
-
-		if (oMove) {
-			oMove.setMovedElements([{
+			element : oTarget.parent,
+			movedElements : [{
 				element : oMovedElement,
 				sourceIndex : oSource.index,
 				targetIndex : oTarget.index
-			}]);
-			oMove.setSource(oSource);
-			oMove.setTarget(oTarget);
+			}],
+			source : oSource,
+			target : oTarget
+		});
+
+		if (oMove) {
 			if (oMove.getMetadata().getName() === "sap.ui.dt.command.SimpleFormMove") {
 				// in case this is a dt command, perform immediately to show 'livechange'
 				oMove.execute();
