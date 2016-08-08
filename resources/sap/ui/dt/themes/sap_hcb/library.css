@@ -31,7 +31,7 @@
 }
 .sapUiDtOverlayFocusable:focus:before {
   content: " ";
-  border: 2px solid rgba(255, 255, 255, 0.8);
+  border: 2px solid #614000;
 }
 .sapUiDtDummyScrollContainer {
   position: absolute;
