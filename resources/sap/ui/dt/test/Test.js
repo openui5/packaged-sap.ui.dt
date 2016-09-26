@@ -23,7 +23,7 @@ function(jQuery, ManagedObject) {
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.40.7
+	 * @version 1.40.8
 	 *
 	 * @constructor
 	 * @private

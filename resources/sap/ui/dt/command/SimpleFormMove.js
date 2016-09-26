@@ -15,7 +15,7 @@ sap.ui
 					 * @class
 					 * @extends sap.ui.dt.command.BaseCommand
 					 * @author SAP SE
-					 * @version 1.40.7
+					 * @version 1.40.8
 					 * @constructor
 					 * @private
 					 * @since 1.40
