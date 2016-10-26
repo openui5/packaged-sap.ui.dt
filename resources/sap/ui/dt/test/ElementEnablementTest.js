@@ -27,7 +27,7 @@ function(jQuery, Test, DesignTime, ElementTest) {
 	 * @extends sap.ui.dt.test.Test
 	 *
 	 * @author SAP SE
-	 * @version 1.42.3
+	 * @version 1.42.4
 	 *
 	 * @constructor
 	 * @private
