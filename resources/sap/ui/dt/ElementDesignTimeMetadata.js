@@ -25,7 +25,7 @@ function(jQuery, DesignTimeMetadata, AggregationDesignTimeMetadata) {
 	 * @extends sap.ui.core.DesignTimeMetadata
 	 *
 	 * @author SAP SE
-	 * @version 1.44.0
+	 * @version 1.44.1
 	 *
 	 * @constructor
 	 * @private
