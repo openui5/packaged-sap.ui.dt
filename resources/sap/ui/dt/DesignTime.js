@@ -30,7 +30,7 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.46.3
+	 * @version 1.46.4
 	 *
 	 * @constructor
 	 * @private
@@ -109,9 +109,13 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 				 */
 				syncing : {},
 				/**
-				 * Event fired when DesignTime's overlays are in-sync with ControlTree of root elements
+				 * Event fired when DesignTime's overlays are in-sync with ControlTree of root elements and registered at all known plugins
 				 */
 				synced : {},
+				/**
+				 * Event fired when DesignTime's overlays are in-sync with ControlTree of root elements
+				 */
+				syncedPureOverlays : {},
 				/**
 				 * Event fired when DesignTime's overlays failed to sync with ControlTree of root elements
 				 */
@@ -127,11 +131,39 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 	DesignTime.prototype.init = function() {
 		// number of element overlays waiting for their designTimeMetadata
 		this._iOverlaysPending = 0;
-		// array of errors while element overlays waiting for their designTimeMetadata
+
 		this._oSelection = this.createSelection();
 		this._oSelection.attachEvent("change", function(oEvent) {
 			this.fireSelectionChange({selection: oEvent.getParameter("selection")});
 		}, this);
+
+		this._collectOverlaysDuringSyncing();
+	};
+
+	DesignTime.prototype._collectOverlaysDuringSyncing = function() {
+		// array of element overlays created between syncing and synced event
+		this._aOverlaysCreatedInLastBatch = [];
+
+		this.attachSyncing(function(){
+			this._aOverlaysCreatedInLastBatch = [];
+		}.bind(this));
+
+		this.attachElementOverlayCreated(function(oEvent){
+			var oNewOverlay = oEvent.getParameter("elementOverlay");
+			this._aOverlaysCreatedInLastBatch.push(oNewOverlay);
+		}.bind(this));
+
+		this.attachSyncedPureOverlays(function(){
+			var aPlugins = this.getPlugins();
+			this._aOverlaysCreatedInLastBatch.forEach(function(oOverlay) {
+				aPlugins.forEach(function(oPlugin) {
+					oPlugin.callElementOverlayRegistrationMethods(oOverlay);
+				});
+			});
+
+			this.fireSynced();
+			this._aOverlaysCreatedInLastBatch = [];
+		}.bind(this));
 	};
 
 	/**
@@ -140,6 +172,7 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 	 */
 	DesignTime.prototype.exit = function() {
 		delete this._iOverlaysPending;
+		delete this._aOverlaysCreatedInLastBatch;
 		this._destroyAllOverlays();
 		this._oSelection.destroy();
 	};
@@ -402,7 +435,7 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 			}.bind(this)).then(function() {
 				this._iOverlaysPending--;
 				if (this._iOverlaysPending === 0) {
-					this.fireSynced();
+					this.fireSyncedPureOverlays();
 				}
 			}.bind(this));
 		}

@@ -25,7 +25,7 @@ function(jQuery, DesignTimeMetadata, AggregationDesignTimeMetadata) {
 	 * @extends sap.ui.core.DesignTimeMetadata
 	 *
 	 * @author SAP SE
-	 * @version 1.46.3
+	 * @version 1.46.4
 	 *
 	 * @constructor
 	 * @private
@@ -130,7 +130,7 @@ function(jQuery, DesignTimeMetadata, AggregationDesignTimeMetadata) {
 		return fnGetRelevantContainer(oElement);
 	};
 
-	ElementDesignTimeMetadata.prototype.getAggregationAction = function(sAction, oElement) {
+	ElementDesignTimeMetadata.prototype.getAggregationAction = function(sAction, oElement, aArgs) {
 		var vAction;
 		var oAggregations = this.getAggregations();
 		var aActions = [];
@@ -139,7 +139,11 @@ function(jQuery, DesignTimeMetadata, AggregationDesignTimeMetadata) {
 			if (oAggregations[sAggregation].actions && oAggregations[sAggregation].actions[sAction]) {
 				vAction = oAggregations[sAggregation].actions[sAction];
 				if (typeof vAction === "function") {
-					vAction = vAction.call(null, oElement);
+					var aActionParameters = [oElement];
+					if (aArgs){
+						aActionParameters = aActionParameters.concat(aArgs);
+					}
+					vAction = vAction.apply(null, aActionParameters);
 				} else if (typeof (vAction) === "string" ) {
 					vAction = { changeType : vAction };
 				}
