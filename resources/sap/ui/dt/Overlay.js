@@ -32,7 +32,7 @@ function(jQuery, Control, MutationObserver, ElementUtil, OverlayUtil, DOMUtil) {
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.44.9
+	 * @version 1.44.10
 	 *
 	 * @constructor
 	 * @private
