@@ -18,7 +18,7 @@ sap.ui.define([
 	 * @class The ContextMenu registers event handler to open the context menu. Menu entries can dynamically be added
 	 * @extends sap.ui.dt.Plugin
 	 * @author SAP SE
-	 * @version 1.46.5
+	 * @version 1.46.6
 	 * @constructor
 	 * @private
 	 * @since 1.34
@@ -122,11 +122,15 @@ sap.ui.define([
 	 * @private
 	 */
 	ContextMenu.prototype._onItemSelected = function(oEvent) {
+		var aSelection = [];
 		var sId = oEvent.getParameter("item").data("id");
 		this._aMenuItems.some(function(oItem) {
 			if (sId === oItem.id) {
 				var oDesignTime = this.getDesignTime();
-				var aSelection = oDesignTime.getSelection();
+				aSelection = oDesignTime.getSelection();
+
+				jQuery.sap.assert(aSelection.length > 0, "sap.ui.rta - Opening context menu, with empty selection - check event order");
+
 				oItem.handler(aSelection);
 				return true;
 			}
@@ -142,6 +146,8 @@ sap.ui.define([
 	ContextMenu.prototype._onContextMenu = function(oEvent) {
 		// hide browser-context menu
 		oEvent.preventDefault();
+		document.activeElement.blur();
+
 		var oOverlay = sap.ui.getCore().byId(oEvent.currentTarget.id);
 
 		if (oOverlay && oOverlay.isSelectable()) {
