@@ -16,7 +16,7 @@ sap.ui.define([
 	 * @class Context - Menu for Design time
 	 * @extends sap.ui.unified.Menu
 	 * @author SAP SE
-	 * @version 1.44.13
+	 * @version 1.44.14
 	 * @constructor
 	 * @private
 	 * @since 1.34
