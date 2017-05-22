@@ -32,7 +32,7 @@ function(Overlay, ControlObserver, ManagedObjectObserver, ElementDesignTimeMetad
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.46.7
+	 * @version 1.46.8
 	 *
 	 * @constructor
 	 * @private
@@ -558,7 +558,6 @@ function(Overlay, ControlObserver, ManagedObjectObserver, ElementDesignTimeMetad
 
 		var sAggregationName = oEvent.getParameters().name;
 		if (sAggregationName) {
-			this.sync();
 			var oAggregationOverlay = this.getAggregationOverlay(sAggregationName);
 			// private aggregations are also skipped
 			var bAggregationOverlayVisible = oAggregationOverlay && oAggregationOverlay.isVisible();

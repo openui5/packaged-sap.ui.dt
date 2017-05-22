@@ -30,7 +30,7 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.46.7
+	 * @version 1.46.8
 	 *
 	 * @constructor
 	 * @private
@@ -543,12 +543,18 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 	 * @private
 	 */
 	DesignTime.prototype._onElementOverlayAddAggregation = function(oChild, oParent, sAggregationName) {
+		var oParentOverlay = OverlayRegistry.getOverlay(oParent);
+		var oParentAggregationOverlay = oParentOverlay.getAggregationOverlay(sAggregationName);
 		// oElement can be of an alternative type (setLabel(sText) for example)
 		if (oChild instanceof sap.ui.core.Element) {
 			var oChildElementOverlay = OverlayRegistry.getOverlay(oChild);
 			if (!oChildElementOverlay) {
-				var bIsInHiddenTree = OverlayRegistry.getOverlay(oParent).getAggregationOverlay(sAggregationName).isInHiddenTree();
+				var bIsInHiddenTree = oParentOverlay.getAggregationOverlay(sAggregationName).isInHiddenTree();
 				this._createElementOverlay(oChild, bIsInHiddenTree);
+			} else {
+				// element overlay needs to have a correct parent for propagation
+				oParentAggregationOverlay.addChild(oChildElementOverlay);
+
 			}
 		}
 	};
