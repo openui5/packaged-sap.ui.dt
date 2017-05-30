@@ -31,7 +31,7 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.48.0
+	 * @version 1.48.1
 	 *
 	 * @constructor
 	 * @private
@@ -63,12 +63,12 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 				 },
 
 				/**
-				 * Whether overlays of DT is being enabled (hidden from the screen). Please note DT is still
-				 * working in this mode, if you need to stop it, destroy its instance.
+				 * Whether overlays of DT are enabled (shown on the screen). When 'false', DT is still
+				 * working, but overlays do not recalculate their styles.
 				 */
 				 enabled: {
 					type: "boolean",
-					defaultValue: false
+					defaultValue: true
 				 }
 			},
 			associations : {
