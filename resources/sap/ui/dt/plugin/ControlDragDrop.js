@@ -18,7 +18,7 @@ sap.ui.define([
 	 * @class The ControlDragDrop enables D&D functionality for the overlays based on aggregation types
 	 * @extends sap.ui.dt.plugin.DragDrop"
 	 * @author SAP SE
-	 * @version 1.38.22
+	 * @version 1.38.23
 	 * @constructor
 	 * @private
 	 * @since 1.30
