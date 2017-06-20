@@ -12,7 +12,7 @@ sap.ui.define(['sap/ui/dt/RenderingUtil'],
 
 	/**
 	 * @author SAP SE
-	 * @version 1.44.14
+	 * @version 1.44.15
 	 * @namespace
 	 */
 	var AggregationOverlayRenderer = {
