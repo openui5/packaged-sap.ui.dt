@@ -31,7 +31,7 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.48.2
+	 * @version 1.48.3
 	 *
 	 * @constructor
 	 * @private
@@ -510,6 +510,14 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 
 		var sAggregationName = oEvent.getParameter("name");
 		this._createChildOverlaysForAggregation(oElementOverlay, sAggregationName);
+		// if aggregation overlay is created without element overlay being created (not syncing),
+		// the aggregation overlay must be registered on the plugins
+		if (this._iOverlaysPending === 0){
+			var aPlugins = this.getPlugins();
+			aPlugins.forEach(function(oPlugin) {
+				oPlugin.callAggregationOverlayRegistrationMethods(oElementOverlay);
+			});
+		}
 	};
 
 	/**
