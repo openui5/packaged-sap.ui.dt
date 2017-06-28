@@ -12,7 +12,7 @@ sap.ui.define(['jquery.sap.global'],
 
 	/**
 	 * @author SAP SE
-	 * @version 1.46.9
+	 * @version 1.46.10
 	 * @namespace
 	 */
 	var StatisticRenderer = {
