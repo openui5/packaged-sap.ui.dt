@@ -18,7 +18,7 @@ sap.ui.define([
 	 * @class The ManagedObjectObserver observes changes of a ManagedObject and propagates them via events.
 	 * @extends sap.ui.base.ManagedObject
 	 * @author SAP SE
-	 * @version 1.44.15
+	 * @version 1.44.16
 	 * @constructor
 	 * @private
 	 * @since 1.30
