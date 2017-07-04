@@ -26,7 +26,7 @@ function(jQuery, ManagedObject, ElementUtil, DOMUtil) {
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.46.10
+	 * @version 1.46.11
 	 *
 	 * @constructor
 	 * @private
