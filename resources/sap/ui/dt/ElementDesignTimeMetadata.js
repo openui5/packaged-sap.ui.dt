@@ -25,7 +25,7 @@ function(jQuery, DesignTimeMetadata, AggregationDesignTimeMetadata) {
 	 * @extends sap.ui.core.DesignTimeMetadata
 	 *
 	 * @author SAP SE
-	 * @version 1.48.3
+	 * @version 1.48.4
 	 *
 	 * @constructor
 	 * @private
@@ -82,7 +82,8 @@ function(jQuery, DesignTimeMetadata, AggregationDesignTimeMetadata) {
 	};
 
 	/**
-	 * Returns the plain DT metadata for an aggregation name
+	 * Returns the plain DT metadata for an aggregation name,
+	 * including also aggregation-like associations
 	 * @param {string} sAggregationName an aggregation name
 	 * @return {object} returns the DT metadata for an aggregation with a given name
 	 * @public
@@ -107,12 +108,21 @@ function(jQuery, DesignTimeMetadata, AggregationDesignTimeMetadata) {
 	};
 
 	/**
-	 * Returns the DT metadata for all aggregations
+	 * Returns the DT metadata for all aggregations,
+	 * including also aggregation-like associations
 	 * @return {map} returns the DT metadata for all aggregations
 	 * @public
 	 */
 	ElementDesignTimeMetadata.prototype.getAggregations = function() {
-		return this.getData().aggregations;
+		var mAggregations = this.getData().aggregations;
+		var mAssociations = this.getData().associations || {};
+		Object.keys(mAssociations).forEach(function(sAssociation){
+			var mAssociation = mAssociations[sAssociation];
+			if (mAssociation.aggregationLike){
+				mAggregations[sAssociation] = mAssociation;
+			}
+		});
+		return mAggregations;
 	};
 
 	/**
