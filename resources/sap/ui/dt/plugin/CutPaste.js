@@ -18,7 +18,7 @@ sap.ui.define([
 	 * @class The CutPaste enables Cut & Paste functionality for the overlays based on aggregation types
 	 * @extends sap.ui.dt.Plugin"
 	 * @author SAP SE
-	 * @version 1.48.5
+	 * @version 1.48.6
 	 * @constructor
 	 * @private
 	 * @since 1.34
@@ -114,7 +114,9 @@ sap.ui.define([
 			oEvent.stopPropagation();
 		} else if ((oEvent.keyCode === jQuery.sap.KeyCodes.V) && (oEvent.shiftKey === false) && (oEvent.altKey === false) && (bCtrlKey === true)) {
 			// CTRL+V
-			this.paste(oOverlay);
+			if (this.getElementMover().getMovedOverlay()) {
+				this.paste(oOverlay);
+			}
 			oEvent.stopPropagation();
 		} else if (oEvent.keyCode === jQuery.sap.KeyCodes.ESCAPE) {
 			// ESC
