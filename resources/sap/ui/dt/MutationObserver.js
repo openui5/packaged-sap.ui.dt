@@ -21,7 +21,7 @@ sap.ui.define([
 	 * @class The MutationObserver observes changes of a ManagedObject and propagates them via events.
 	 * @extends sap.ui.base.ManagedObject
 	 * @author SAP SE
-	 * @version 1.44.19
+	 * @version 1.44.20
 	 * @constructor
 	 * @private
 	 * @since 1.30
