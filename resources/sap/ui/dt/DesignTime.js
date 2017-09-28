@@ -31,7 +31,7 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.50.1
+	 * @version 1.50.2
 	 *
 	 * @constructor
 	 * @private
@@ -635,7 +635,9 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 		var oElementOverlay = OverlayRegistry.getOverlay(oElement);
 		if (oElementOverlay) {
 			OverlayUtil.iterateOverlayElementTree(oElementOverlay, function(oChildOverlay) {
-				aElementOverlays.push(oChildOverlay);
+				if (oChildOverlay.getDesignTimeMetadata()) {
+					aElementOverlays.push(oChildOverlay);
+				}
 			});
 		}
 
@@ -651,9 +653,9 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 		$OverlayContainer[bValue ? 'show' : 'hide']();
 
 		this.getElementOverlays().forEach(function (oOverlay) {
-			oOverlay.setEnabled(bValue);
+			oOverlay.setVisible(bValue);
 			oOverlay.getChildren().forEach(function (oOverlayChild) {
-				oOverlayChild.setEnabled(bValue);
+				oOverlayChild.setVisible(bValue);
 			});
 		});
 
