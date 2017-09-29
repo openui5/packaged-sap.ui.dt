@@ -26,7 +26,7 @@ function(jQuery, ManagedObject, ElementEnablementTest2) {
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.50.2
+	 * @version 1.50.3
 	 *
 	 * @constructor
 	 * @private
