@@ -25,7 +25,7 @@ function(jQuery, Overlay) {
 	 * @extends sap.ui.core.Overlay
 	 *
 	 * @author SAP SE
-	 * @version 1.50.4
+	 * @version 1.50.5
 	 *
 	 * @constructor
 	 * @private
@@ -149,7 +149,7 @@ function(jQuery, Overlay) {
 	/**
 	 * @inheritDoc
 	 */
-	Overlay.prototype._getScrollContainerIndex = function(oOverlayParent, oOverlay) {
+	AggregationOverlay.prototype._getScrollContainerIndex = function(oOverlayParent, oOverlay) {
 		var iScrollContainerIndex;
 		oOverlay = oOverlay || this;
 		if (oOverlayParent._aScrollContainers) {
