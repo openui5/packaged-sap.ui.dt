@@ -15,7 +15,7 @@ sap.ui.define(['jquery.sap.global'],
 			 * @class Utility functionality to work with élements, e.g. iterate through aggregations, find parents, ...
 			 *
 			 * @author SAP SE
-			 * @version 1.52.0
+			 * @version 1.52.1
 			 *
 			 * @private
 			 * @static
@@ -535,7 +535,7 @@ sap.ui.define(['jquery.sap.global'],
 					bVisible = $CurrentElement.is(":visible")
 						&& $CurrentElement.css("visibility") !== "hidden"
 						&& $CurrentElement.css("opacity") > 0
-						&& bFilterOpacity ? parseFloat(bFilterOpacity[1]) > 0 : true;
+						&& (bFilterOpacity ? parseFloat(bFilterOpacity[1]) > 0 : true);
 					if (bVisible) {
 						break;
 					}

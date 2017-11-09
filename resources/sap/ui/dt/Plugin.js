@@ -23,7 +23,7 @@ function(ManagedObject) {
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.52.0
+	 * @version 1.52.1
 	 *
 	 * @constructor
 	 * @private
@@ -297,8 +297,8 @@ function(ManagedObject) {
 		return [{
 			id: mPropertyBag.pluginId,
 			text: this.getActionText(oOverlay, mAction, mPropertyBag.pluginId),
-			handler: function(aOverlays){
-				return this.handler(aOverlays);
+			handler: function(aOverlays, mPropertyBag){
+				return this.handler(aOverlays, mPropertyBag);
 			}.bind(this),
 			enabled: this.isEnabled.bind(this),
 			rank: mPropertyBag.rank
