@@ -32,7 +32,7 @@ function(jQuery, Control, MutationObserver, ElementUtil, OverlayUtil, DOMUtil) {
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.52.1
+	 * @version 1.52.2
 	 *
 	 * @constructor
 	 * @private
@@ -764,8 +764,12 @@ function(jQuery, Control, MutationObserver, ElementUtil, OverlayUtil, DOMUtil) {
 			if (!this.getLazyRendering()) {
 				return true;
 			}
+			var oElement = this.getElementInstance();
+			if (!oElement){
+				return false;
+			}
 			var oDesignTimeMetadata = this.getDesignTimeMetadata();
-			return oDesignTimeMetadata ? !oDesignTimeMetadata.isIgnored(this.getElementInstance()) : false;
+			return oDesignTimeMetadata ? !oDesignTimeMetadata.isIgnored(oElement) : false;
 		} else {
 			return this.getProperty("visible");
 		}

@@ -27,7 +27,7 @@ function(jQuery, ManagedObject, ElementTest, ChangeRegistry) {
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.52.1
+	 * @version 1.52.2
 	 *
 	 * @constructor
 	 * @private

@@ -32,7 +32,7 @@ function(Overlay, ControlObserver, ManagedObjectObserver, ElementDesignTimeMetad
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.52.1
+	 * @version 1.52.2
 	 *
 	 * @constructor
 	 * @private
@@ -178,6 +178,23 @@ function(Overlay, ControlObserver, ManagedObjectObserver, ElementDesignTimeMetad
 
 		this._oMutationObserver = Overlay.getMutationObserver();
 		this._oMutationObserver.attachDomChanged(this._onDomChanged, this);
+	};
+
+	/**
+	 * @override
+	 */
+	ElementOverlay.prototype.onAfterRendering = function() {
+		var bOldDomInvisible = !this._oDomRef;
+		Overlay.prototype.onAfterRendering.apply(this, arguments);
+
+		// fire ElementModified, when the overlay had no domRef before, but has one now
+		if (bOldDomInvisible && this._oDomRef) {
+			var oParams = {
+				id: this.getId(),
+				type: "overlayRendered"
+			};
+			this.fireElementModified(oParams);
+		}
 	};
 
 	/**
@@ -983,8 +1000,12 @@ function(Overlay, ControlObserver, ManagedObjectObserver, ElementDesignTimeMetad
 		if (oElement instanceof sap.ui.core.Control) {
 			return oElement.getVisible();
 		}
-		var oElementDomRef = this.getAssociatedDomRef();
-		return oElementDomRef ? ElementUtil.isVisible(oElementDomRef) : undefined;
+		var oDesignTimeMetadata = this.getDesignTimeMetadata();
+		var fnisVisible = oDesignTimeMetadata && oDesignTimeMetadata.getData().isVisible;
+		if (!fnisVisible) {
+			return undefined;
+		}
+		return fnisVisible(this.getElementInstance());
 	};
 
 	/**

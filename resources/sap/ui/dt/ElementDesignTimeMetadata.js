@@ -25,7 +25,7 @@ function(jQuery, DesignTimeMetadata, AggregationDesignTimeMetadata) {
 	 * @extends sap.ui.core.DesignTimeMetadata
 	 *
 	 * @author SAP SE
-	 * @version 1.52.1
+	 * @version 1.52.2
 	 *
 	 * @constructor
 	 * @private
@@ -123,6 +123,13 @@ function(jQuery, DesignTimeMetadata, AggregationDesignTimeMetadata) {
 			}
 		});
 		return mAggregations;
+	};
+
+	ElementDesignTimeMetadata.prototype.isActionAvailableOnAggregations = function(sAction) {
+		var mAggregations = this.getAggregations();
+		return Object.keys(mAggregations).some( function (sAggregation) {
+			return mAggregations[sAggregation].actions && mAggregations[sAggregation].actions[sAction];
+		});
 	};
 
 	ElementDesignTimeMetadata.prototype.getAggregationAction = function(sAction, oElement, aArgs) {
