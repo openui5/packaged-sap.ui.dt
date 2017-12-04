@@ -15,7 +15,7 @@ sap.ui.define(['jquery.sap.global'],
 			 * @class Utility functionality to work with élements, e.g. iterate through aggregations, find parents, ...
 			 *
 			 * @author SAP SE
-			 * @version 1.48.14
+			 * @version 1.48.15
 			 *
 			 * @private
 			 * @static

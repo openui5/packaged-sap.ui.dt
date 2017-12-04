@@ -31,7 +31,7 @@ function(ManagedObject, ElementOverlay, OverlayRegistry, Selection, ElementDesig
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.48.14
+	 * @version 1.48.15
 	 *
 	 * @constructor
 	 * @private
