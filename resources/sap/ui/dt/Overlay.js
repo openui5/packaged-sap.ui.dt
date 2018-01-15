@@ -1,6 +1,6 @@
 /*!
  * UI development toolkit for HTML5 (OpenUI5)
- * (c) Copyright 2009-2017 SAP SE or an SAP affiliate company.
+ * (c) Copyright 2009-2018 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
@@ -32,7 +32,7 @@ function(jQuery, Control, MutationObserver, ElementUtil, OverlayUtil, DOMUtil) {
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.52.3
+	 * @version 1.52.4
 	 *
 	 * @constructor
 	 * @private
@@ -801,10 +801,8 @@ function(jQuery, Control, MutationObserver, ElementUtil, OverlayUtil, DOMUtil) {
 	 */
 	Overlay.prototype.isRoot = function() {
 		var oParent = this.getParent();
-		if (oParent) {
-			if (!oParent.getDomRef) {
-				return true;
-			}
+		if (!oParent || !oParent.getDomRef) {
+			return true;
 		}
 	};
 
