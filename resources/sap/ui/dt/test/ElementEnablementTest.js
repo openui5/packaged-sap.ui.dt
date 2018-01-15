@@ -1,6 +1,6 @@
 /*!
  * UI development toolkit for HTML5 (OpenUI5)
- * (c) Copyright 2009-2017 SAP SE or an SAP affiliate company.
+ * (c) Copyright 2009-2018 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
@@ -14,6 +14,24 @@ sap.ui.define([
 function(jQuery, Test, DesignTime, ElementTest) {
 	"use strict";
 
+	// Wait until the theme is changed
+	function themeChanged() {
+		return new Promise(function(resolve) {
+			function onChanged() {
+				sap.ui.getCore().detachThemeChanged(onChanged);
+				resolve();
+			}
+			sap.ui.getCore().attachThemeChanged(onChanged);
+		});
+	}
+	// Wait until the theme is applied
+	function whenThemeApplied() {
+		if (sap.ui.getCore().isThemeApplied()) {
+			return Promise.resolve();
+		} else {
+			return themeChanged();
+		}
+	}
 
 	/**
 	 * Constructor for an ElementEnablementTest.
@@ -27,7 +45,7 @@ function(jQuery, Test, DesignTime, ElementTest) {
 	 * @extends sap.ui.dt.test.Test
 	 *
 	 * @author SAP SE
-	 * @version 1.44.25
+	 * @version 1.44.26
 	 *
 	 * @constructor
 	 * @private
@@ -156,51 +174,51 @@ function(jQuery, Test, DesignTime, ElementTest) {
 	 * @private
 	 */
 	ElementEnablementTest.prototype._setup = function() {
-		var that = this;
-
 		window.clearTimeout(this._iTimeout);
 		this._bNoRenderer = false;
 		this._bErrorDuringRendering = false;
 
 		return new Promise(function(fnResolve, fnReject) {
-			that._oElement = that._createElement();
+			whenThemeApplied().then(function() {
+				this._oElement = this._createElement();
 
-			try {
-				that._oElement.getRenderer();
-			} catch (oError) {
-				that._bNoRenderer = true;
-			}
-
-			if (!that._bNoRenderer) {
 				try {
-					that._oElement.placeAt(that._getTestArea().get(0));
-					sap.ui.getCore().applyChanges();
+					this._oElement.getRenderer();
 				} catch (oError) {
-					that._bErrorDuringRendering = true;
+					this._bNoRenderer = true;
 				}
 
-				if (!that._bErrorDuringRendering) {
-					that._oDesignTime = new DesignTime({
-						rootElements : [that._oElement]
-					});
-					that._oDesignTime.attachEventOnce("synced", function() {
+				if (!this._bNoRenderer) {
+					try {
+						this._oElement.placeAt(this._getTestArea().get(0));
 						sap.ui.getCore().applyChanges();
-						if (that.getTimeout()) {
-							that._iTimeout = window.setTimeout(function() {
-								fnResolve();
-							}, that.getTimeout());
-						} else {
-							fnResolve();
-						}
+					} catch (oError) {
+						this._bErrorDuringRendering = true;
+					}
 
-					}, that);
+					if (!this._bErrorDuringRendering) {
+						this._oDesignTime = new DesignTime({
+							rootElements : [this._oElement]
+						});
+						this._oDesignTime.attachEventOnce("synced", function() {
+							sap.ui.getCore().applyChanges();
+							if (this.getTimeout()) {
+								this._iTimeout = window.setTimeout(function() {
+									fnResolve();
+								}, this.getTimeout());
+							} else {
+								fnResolve();
+							}
+
+						}, this);
+					} else {
+						fnResolve();
+					}
 				} else {
 					fnResolve();
 				}
-			} else {
-				fnResolve();
-			}
-		});
+			}.bind(this));
+		}.bind(this));
 	};
 
 
