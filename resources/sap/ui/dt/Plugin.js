@@ -23,7 +23,7 @@ function(ManagedObject) {
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.52.5
+	 * @version 1.52.6
 	 *
 	 * @constructor
 	 * @private
@@ -229,7 +229,16 @@ function(ManagedObject) {
 	 * @return {Boolean} Returns true if there is no multiple selection active
 	 */
 	Plugin.prototype.isMultiSelectionInactive = function() {
-		return this.getDesignTime().getSelection().length < 2;
+		return this.getNumberOfSelectedOverlays() < 2;
+	};
+
+	/**
+	 * Asks the DesignTime for the number of currently selected overlays.
+	 *
+	 * @return {integer} Returns the number of selected overlays as integer
+	 */
+	Plugin.prototype.getNumberOfSelectedOverlays = function() {
+		return this.getDesignTime().getSelection().length;
 	};
 
 	/**
