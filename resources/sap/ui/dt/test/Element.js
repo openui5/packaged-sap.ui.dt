@@ -20,7 +20,7 @@ function(jQuery, ElementUtil, OverlayRegistry) {
 	 * Utility functionality for Element tests
 	 *
 	 * @author SAP SE
-	 * @version 1.52.7
+	 * @version 1.52.8
 	 *
 	 * @private
 	 * @static
