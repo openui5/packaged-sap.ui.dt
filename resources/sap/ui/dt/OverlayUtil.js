@@ -22,7 +22,7 @@ function(
 	 *
 	 * @class Utility functionality to work with overlays
 	 * @author SAP SE
-	 * @version 1.54.0
+	 * @version 1.54.1
 	 * @private
 	 * @static
 	 * @since 1.30
@@ -606,6 +606,27 @@ function(
 		}).filter(function(oOverlay, iPosition, aAggregationOverlays) {
 			return aAggregationOverlays.indexOf(oOverlay) === iPosition;
 		});
+	};
+
+	/**
+	 * Checks if an Overlay is part of an aggregation binding
+	 * The check is done recursively
+	 * @param  {sap.ui.dt.ElementOverlay} oElementOverlay Overlay being checked
+	 * @param  {string}  sAggregationName The name of the aggregation being checked
+	 * @return {Boolean}                  Returns true if Overlay is in aggregation binding
+	 */
+	OverlayUtil.isInAggregationBinding = function(oElementOverlay, sAggregationName) {
+		if (sAggregationName && oElementOverlay.getElement().getBinding(sAggregationName)) {
+			return true;
+		}
+		return oElementOverlay.isRoot()
+			? false
+			: (
+				this.isInAggregationBinding(
+					oElementOverlay.getParentElementOverlay(),
+					oElementOverlay.getElement().sParentAggregationName
+				)
+			);
 	};
 
 	return OverlayUtil;

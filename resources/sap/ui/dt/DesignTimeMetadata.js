@@ -29,7 +29,7 @@ function(
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.54.0
+	 * @version 1.54.1
 	 *
 	 * @constructor
 	 * @private
@@ -76,8 +76,7 @@ function(
 	DesignTimeMetadata.prototype.getDefaultData = function() {
 		return {
 			ignore: false,
-			domRef: undefined,
-			cloneDomRef: false
+			domRef: undefined
 		};
 	};
 
@@ -97,15 +96,6 @@ function(
 	};
 
 	/**
-	 * Returns property "copyDom" of the DT metadata
-	 * @return {boolean} if overlay should copy the DOM of its associated element
-	 * @public
-	 */
-	DesignTimeMetadata.prototype.getCloneDomRef = function() {
-		return this.getData().cloneDomRef;
-	};
-
-	/**
 	 * Returns property "domRef" of the DT metadata
 	 * @return {string|Element} Returns reference to the relevant DOM element or its selector
 	 * @public
@@ -113,7 +103,6 @@ function(
 	DesignTimeMetadata.prototype.getDomRef = function() {
 		return this.getData().domRef;
 	};
-
 
 	/**
 	 * Returns a DOM representation for an Element or aggregation, if it can be found or undefined

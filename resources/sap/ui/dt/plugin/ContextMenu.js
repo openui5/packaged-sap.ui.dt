@@ -26,7 +26,7 @@ sap.ui.define([
 	 * @class The ContextMenu registers event handler to open the context menu. Menu entries can dynamically be added
 	 * @extends sap.ui.dt.Plugin
 	 * @author SAP SE
-	 * @version 1.54.0
+	 * @version 1.54.1
 	 * @constructor
 	 * @private
 	 * @since 1.34

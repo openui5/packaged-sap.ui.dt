@@ -4,7 +4,6 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
-// Provides class sap.ui.dt.DesignTime.
 sap.ui.define([
 	'sap/ui/base/ManagedObject',
 	'sap/ui/dt/ElementOverlay',
@@ -50,7 +49,7 @@ function(
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.54.0
+	 * @version 1.54.1
 	 *
 	 * @constructor
 	 * @private
@@ -457,20 +456,23 @@ function(
 			root: true,
 			visible: this.getEnabled()
 		})
-			.then(function (oElementOverlay) {
-				Overlay.getOverlayContainer().append(oElementOverlay.render());
-				oElementOverlay.applyStyles();
-				this._oTaskManager.complete(iTaskId);
-				return oElementOverlay;
-			}.bind(this), function () {
-				jQuery.sap.log.error('sap.ui.dt: root element with id = "' + vRootElement.getId() + '" initialization is failed');
-				this._oTaskManager.cancel(iTaskId);
-			}.bind(this));
+			.then(
+				function (oElementOverlay) {
+					Overlay.getOverlayContainer().append(oElementOverlay.render());
+					oElementOverlay.applyStyles();
+					this._oTaskManager.complete(iTaskId);
+					return oElementOverlay;
+				}.bind(this),
+				function () {
+					jQuery.sap.log.error('sap.ui.dt: root element with id = "' + vRootElement.getId() + '" initialization is failed');
+					this._oTaskManager.cancel(iTaskId);
+				}.bind(this)
+			);
 	};
 
 	/**
-	 * Removes a root element from the DesignTime and destroys overlays for it and it's public descendants
-	 * @param {string|sap.ui.core.Element} vRootElement element or elemet's id
+	 * Removes a root element from the DesignTime and destroys overlays for it and its public descendants
+	 * @param {string|sap.ui.core.Element} vRootElement element or element id
 	 * @return {sap.ui.dt.DesignTime} this
 	 * @protected
 	 */
@@ -563,8 +565,18 @@ function(
 							return this._createChildren(oElementOverlay, mParams.parentMetadata)
 								.then(function () {
 									delete this._mPendingOverlays[sElementId];
-									// Check if the overlay is still alive (case when element was destroyed during overlay creation process)
-									if (oElementOverlay.bIsDestroyed) {
+									// When DesignTime instance was destroyed during overlay creation process
+									if (this.bIsDestroyed) {
+										// TODO: refactor destroy() logic. See @676 & @788
+										oElementOverlay.detachEvent('destroyed', this._onElementOverlayDestroyed);
+										oElementOverlay.destroy();
+										this._oTaskManager.cancel(iTaskId);
+										return Promise.reject(Util.createError(
+											"DesignTime#createOverlay",
+											"while creating overlay, DesignTime instance has been destroyed"
+										));
+									// When element was destroyed during overlay creation process
+									} else if (oElementOverlay.bIsDestroyed) {
 										this._oTaskManager.cancel(iTaskId);
 										return Promise.reject(Util.createError(
 											"DesignTime#createOverlay",
@@ -663,15 +675,13 @@ function(
 					);
 
 					oElementOverlay.detachEvent('destroyed', this._onElementOverlayDestroyed);
+					oElementOverlay.detachEvent('elementDestroyed', this._onElementDestroyed);
 					oElementOverlay.destroy();
 
 					fnReject(oError);
 				}.bind(this, oElement.getId()),
 				destroyed: this._onElementOverlayDestroyed,
-				scrollSynced: function () {
-					// FIXME: temporal workaround for ObjectPage
-					this.applyStyles();
-				},
+				elementDestroyed: this._onElementDestroyed.bind(this),
 				selectionChange: this._onElementOverlaySelectionChange.bind(this),
 				elementModified: this._onElementModified.bind(this)
 			});
@@ -794,6 +804,12 @@ function(
 		});
 	};
 
+	DesignTime.prototype._onElementDestroyed = function (oEvent) {
+		var sElementId = oEvent.getParameter("targetId");
+
+		this.removeRootElement(sElementId);
+	};
+
 	/**
 	 * Handler for destroy event of AggregationOverlay
 	 * @param {sap.ui.baseEvent} oEvent event object
@@ -879,7 +895,11 @@ function(
 							)
 						);
 
-						jQuery.sap.log.error(Util.errorToString(oError));
+						// Omit error message if the element was destroyed during overlay initialisation
+						// (e.g. SimpleForm case when multi-removal takes place)
+						if (!oElement.bIsDestroyed){
+							jQuery.sap.log.error(Util.errorToString(oError));
+						}
 					}.bind(this, oElement.getId(), oParentAggregationOverlay.getId()));
 			} else {
 				// This is necessary when ElementOverlay was created for an Element which is not inside RootElement

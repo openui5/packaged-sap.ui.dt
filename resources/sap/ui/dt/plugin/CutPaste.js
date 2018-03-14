@@ -25,7 +25,7 @@ sap.ui.define([
 	 * @class The CutPaste enables Cut & Paste functionality for the overlays based on aggregation types
 	 * @extends sap.ui.dt.Plugin"
 	 * @author SAP SE
-	 * @version 1.54.0
+	 * @version 1.54.1
 	 * @constructor
 	 * @private
 	 * @since 1.34
@@ -62,7 +62,11 @@ sap.ui.define([
 		var oElement = oOverlay.getElement();
 		//Register key down so that ESC is possible on all overlays
 		oOverlay.attachBrowserEvent("keydown", this._onKeyDown, this);
-		if (this.getElementMover().isMovableType(oElement) && this.getElementMover().checkMovable(oOverlay)) {
+		if (
+			this.getElementMover().isMovableType(oElement)
+			&& this.getElementMover().checkMovable(oOverlay)
+			&& !OverlayUtil.isInAggregationBinding(oOverlay, oElement.sParentAggregationName)
+		) {
 			oOverlay.setMovable(true);
 		}
 

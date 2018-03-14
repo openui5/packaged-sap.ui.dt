@@ -23,7 +23,7 @@ function(
 	 * Static registry for Overlays
 	 *
 	 * @author SAP SE
-	 * @version 1.54.0
+	 * @version 1.54.1
 	 *
 	 * @private
 	 * @static

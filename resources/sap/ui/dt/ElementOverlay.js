@@ -45,7 +45,7 @@ function(
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.54.0
+	 * @version 1.54.1
 	 *
 	 * @constructor
 	 * @private
@@ -151,6 +151,14 @@ function(
 						oldValue: "any",
 						target: "sap.ui.core.Element"
 					}
+				},
+				/**
+				 * Event fired when the associated Element is destroyed
+				 */
+				elementDestroyed : {
+					parameters: {
+						targetId: "string"
+					}
 				}
 			}
 		},
@@ -213,6 +221,10 @@ function(
 			delete this._oMutationObserver;
 		}
 
+		if (this._iApplyStylesRequest) {
+			window.cancelAnimationFrame(this._iApplyStylesRequest);
+		}
+
 		this._unobserve();
 
 		Overlay.prototype.exit.apply(this, arguments);
@@ -254,33 +266,27 @@ function(
 	/**
 	 * @override
 	 */
-	ElementOverlay.prototype.applyStyles = function() {
-		var oGeometry = this.getGeometry();
-		if (oGeometry && oGeometry.visible) {
-			this._sortAggregationOverlaysInDomOrder();
+	ElementOverlay.prototype._setPosition = function() {
+		// Apply Overlay position first, then extra logic based on this new position
+		Overlay.prototype._setPosition.apply(this, arguments);
 
-			this.getScrollContainers().forEach(function(mScrollContainer, iIndex) {
-				// TODO: write Unit test for the case when getAssociatedDomRef() returns undefined (domRef func returns undefined)
-				var $ScrollContainerDomRef = this.getDesignTimeMetadata().getAssociatedDomRef(this.getElement(), mScrollContainer.domRef) || jQuery();
-				var $ScrollContainerOverlayDomRef = this.getScrollContainerByIndex(iIndex);
+		this._sortAggregationOverlaysInDomOrder();
 
-				if ($ScrollContainerDomRef.length) {
-					var oScrollContainerDomRef = $ScrollContainerDomRef.get(0);
-					this._setSize($ScrollContainerOverlayDomRef, DOMUtil.getGeometry(oScrollContainerDomRef));
-					this._setPosition($ScrollContainerOverlayDomRef, DOMUtil.getGeometry(oScrollContainerDomRef), this.$());
-					// sync scroll events from control to scroll container
-					this._handleOverflowScroll(DOMUtil.getGeometry(oScrollContainerDomRef), $ScrollContainerOverlayDomRef, this);
-					// sync scroll events from scroll container to control
-					// this._attachDomRefScrollHandler($ScrollContainerOverlayDomRef, oScrollContainerDomRef);
-				} else {
-					this._deleteDummyContainer($ScrollContainerOverlayDomRef);
-					// mScrollContainer.scrollEvents = false; // FIXME: why needed?
-					$ScrollContainerOverlayDomRef.css("display", "none");
-				}
-			}, this);
-		}
+		this.getScrollContainers().forEach(function(mScrollContainer, iIndex) {
+			// TODO: write Unit test for the case when getAssociatedDomRef() returns undefined (domRef func returns undefined)
+			var $ScrollContainerDomRef = this.getDesignTimeMetadata().getAssociatedDomRef(this.getElement(), mScrollContainer.domRef) || jQuery();
+			var $ScrollContainerOverlayDomRef = this.getScrollContainerByIndex(iIndex);
 
-		Overlay.prototype.applyStyles.apply(this, arguments);
+			if ($ScrollContainerDomRef.length) {
+				var oScrollContainerDomRef = $ScrollContainerDomRef.get(0);
+				this._setSize($ScrollContainerOverlayDomRef, DOMUtil.getGeometry(oScrollContainerDomRef));
+				Overlay.prototype._setPosition.call(this, $ScrollContainerOverlayDomRef, DOMUtil.getGeometry(oScrollContainerDomRef), this.$());
+				this._handleOverflowScroll(DOMUtil.getGeometry(oScrollContainerDomRef), $ScrollContainerOverlayDomRef, this);
+			} else {
+				this._deleteDummyContainer($ScrollContainerOverlayDomRef);
+				$ScrollContainerOverlayDomRef.css("display", "none");
+			}
+		}, this);
 	};
 
 	/**
@@ -623,8 +629,6 @@ function(
 		if (this.getElement() instanceof Control) {
 			this._oObserver = new ControlObserver({
 				target: this.getElement()
-				// TODO: do we really need this event anymore? If any changes in HTML occur, MutationObserver will catch it and trigger applyStyles().
-				// afterRendering: this._onElementAfterRendering.bind(this)
 			});
 		} else {
 			this._oObserver = new ManagedObjectObserver({
@@ -692,14 +696,22 @@ function(
 	ElementOverlay.prototype._onDomChanged = function(oEvent) {
 		// FIXME: instead of checking isReady subscribe on DOM changes when overlay is ready
 		if (this.isReady() && this.isRoot()) {
-			this.applyStyles();
+			if (this._iApplyStylesRequest) {
+				window.cancelAnimationFrame(this._iApplyStylesRequest);
+			}
+			this._iApplyStylesRequest = window.requestAnimationFrame(function () {
+				this.applyStyles();
+				delete this._iApplyStylesRequest;
+			}.bind(this));
 		}
 	};
 
 	/**
 	 * @private
 	 */
-	ElementOverlay.prototype._onElementDestroyed = function() {
+	ElementOverlay.prototype._onElementDestroyed = function(oEvent) {
+		var sElementId = oEvent.getSource().getTarget();
+		this.fireElementDestroyed({targetId : sElementId});
 		if (this._bInit) {
 			this.destroy();
 		} else {

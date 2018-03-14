@@ -22,7 +22,7 @@ function(
 	 * @extends sap.ui.dt.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.54.0
+	 * @version 1.54.1
 	 *
 	 * @constructor
 	 * @private
@@ -173,6 +173,10 @@ function(
 		}, this);
 
 		ManagedObject.prototype.destroy.apply(this, arguments);
+	};
+
+	ScrollbarSynchronizer.prototype.isSyncing = function () {
+		return this._bSyncing;
 	};
 
 	return ScrollbarSynchronizer;

@@ -33,7 +33,7 @@ function(
 	 * @extends sap.ui.core.Overlay
 	 *
 	 * @author SAP SE
-	 * @version 1.54.0
+	 * @version 1.54.1
 	 *
 	 * @constructor
 	 * @private
@@ -157,7 +157,9 @@ function(
 					}
 				}
 
-				oChild.fireAfterRendering();
+				oChild.fireAfterRendering({
+					domRef: $Child.get(0)
+				});
 			}
 
 			this.fireChildAdded();

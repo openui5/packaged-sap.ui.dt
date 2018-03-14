@@ -5,8 +5,17 @@
  */
 
 // Provides class sap.ui.dt.plugin.ControlDragDrop.
-sap.ui.define(['sap/ui/dt/plugin/DragDrop', 'sap/ui/dt/plugin/ElementMover', 'sap/ui/dt/ElementUtil'], function(
-		DragDrop, ElementMover, ElementUtil) {
+sap.ui.define([
+	'sap/ui/dt/plugin/DragDrop',
+	'sap/ui/dt/plugin/ElementMover',
+	'sap/ui/dt/ElementUtil',
+	'sap/ui/dt/OverlayUtil'
+], function(
+	DragDrop,
+	ElementMover,
+	ElementUtil,
+	OverlayUtil
+) {
 	"use strict";
 
 	/**
@@ -19,7 +28,7 @@ sap.ui.define(['sap/ui/dt/plugin/DragDrop', 'sap/ui/dt/plugin/ElementMover', 'sa
 	 * @class The ControlDragDrop enables D&D functionality for the overlays based on aggregation types
 	 * @extends sap.ui.dt.plugin.DragDrop"
 	 * @author SAP SE
-	 * @version 1.54.0
+	 * @version 1.54.1
 	 * @constructor
 	 * @private
 	 * @since 1.30
@@ -81,7 +90,11 @@ sap.ui.define(['sap/ui/dt/plugin/DragDrop', 'sap/ui/dt/plugin/ElementMover', 'sa
 	ControlDragDrop.prototype.registerElementOverlay = function(oOverlay) {
 		DragDrop.prototype.registerElementOverlay.apply(this, arguments);
 		var oElement = oOverlay.getElement();
-		if (this.getElementMover().isMovableType(oElement) && this.getElementMover().checkMovable(oOverlay)) {
+		if (
+			this.getElementMover().isMovableType(oElement)
+			&& this.getElementMover().checkMovable(oOverlay)
+			&& !OverlayUtil.isInAggregationBinding(oOverlay, oElement.sParentAggregationName)
+		) {
 			oOverlay.setMovable(true);
 		}
 
