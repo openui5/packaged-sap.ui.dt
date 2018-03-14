@@ -21,7 +21,7 @@ function(
 	 * @class Utility functionality to work with elements, e.g. iterate through aggregations, find parents, ...
 	 *
 	 * @author SAP SE
-	 * @version 1.54.1
+	 * @version 1.54.2
 	 *
 	 * @private
 	 * @static
@@ -543,6 +543,12 @@ function(
 			].join(''));
 		}
 		return bIsManagedObject;
+	};
+
+	ElementUtil.getParent = function (oElement) {
+		return this.isInstanceOf(oElement, 'sap.ui.core.Component')
+			? oElement.oContainer
+			: oElement.getParent();
 	};
 
 	return ElementUtil;

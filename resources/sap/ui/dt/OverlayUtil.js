@@ -22,7 +22,7 @@ function(
 	 *
 	 * @class Utility functionality to work with overlays
 	 * @author SAP SE
-	 * @version 1.54.1
+	 * @version 1.54.2
 	 * @private
 	 * @static
 	 * @since 1.30
@@ -447,9 +447,7 @@ function(
 	 * @private
 	 */
 	OverlayUtil.isInOverlayContainer = function(oNode) {
-		if (oNode && jQuery(oNode).closest(".sapUiDtOverlay, #overlay-container").length) {
-			return true;
-		}
+		return oNode && jQuery(oNode).closest(".sapUiDtOverlay, #overlay-container").length > 0;
 	};
 
 	/**

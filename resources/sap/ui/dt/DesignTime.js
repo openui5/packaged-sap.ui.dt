@@ -49,7 +49,7 @@ function(
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.54.1
+	 * @version 1.54.2
 	 *
 	 * @constructor
 	 * @private
@@ -555,7 +555,7 @@ function(
 				return this._mPendingOverlays[sElementId];
 			// 4. Create new ElementOverlay
 			} else {
-				if (typeof mParams.root === "undefined" && !mParams.element.getParent()) {
+				if (typeof mParams.root === "undefined" && !ElementUtil.getParent(mParams.element)) {
 					mParams.root = true;
 				}
 				this._mPendingOverlays[sElementId] = this._createElementOverlay(mParams)
@@ -728,6 +728,7 @@ function(
 						.map(function (oElement) {
 							return this.createOverlay({
 								element: oElement,
+								root: false,
 								parentMetadata: mAggregationMetadata
 							})
 								// If creation of one of the children is aborted, we still continue our execution
@@ -874,6 +875,7 @@ function(
 					.then(
 						function (oOverlay) {
 							oParentAggregationOverlay.insertChild(null, oOverlay);
+							oOverlay.applyStyles(); // TODO: remove after Task Manager implementation
 							this._oTaskManager.complete(iTaskId);
 						}.bind(this),
 						function (vError) {

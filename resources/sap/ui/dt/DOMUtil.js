@@ -20,7 +20,7 @@ function(
 	 * Utility functionality for DOM
 	 *
 	 * @author SAP SE
-	 * @version 1.54.1
+	 * @version 1.54.2
 	 *
 	 * @private
 	 * @static
@@ -381,6 +381,11 @@ function(
 
 		// FIXME: we can't use Overlay module because of the cycled dependency
 		jQuery('#overlay-container').prepend(oStyle);
+	};
+
+	DOMUtil.contains = function (sId, oTargetNode) {
+		var oNode = document.getElementById(sId);
+		return oNode && oNode.contains(oTargetNode);
 	};
 
 	return DOMUtil;
