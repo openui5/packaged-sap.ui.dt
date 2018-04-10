@@ -18,7 +18,7 @@ sap.ui.define([
 	 * @class A simple MiniMenu.
 	 * @extends sap.ui.core.Control
 	 * @author SAP SE
-	 * @version 1.54.2
+	 * @version 1.54.3
 	 * @constructor
 	 * @private
 	 * @experimental

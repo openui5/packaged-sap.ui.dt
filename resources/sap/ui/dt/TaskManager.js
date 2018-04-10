@@ -21,7 +21,7 @@ function(
 	 * The TaskManager keeps list of task and allows to manage them via simple API.
 	 *
 	 * @author SAP SE
-	 * @version 1.54.2
+	 * @version 1.54.3
 	 *
 	 * @constructor
 	 * @private

@@ -17,7 +17,7 @@ sap.ui.define(function() {
 	 * @namespace
 	 * @name sap.ui.dt
 	 * @author SAP SE
-	 * @version 1.54.2
+	 * @version 1.54.3
 	 * @experimental This class is experimental and provides only limited functionality. Also the API might be changed in future.
 	 * @private
 	 */
