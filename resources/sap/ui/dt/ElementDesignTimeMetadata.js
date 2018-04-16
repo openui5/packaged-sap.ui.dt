@@ -22,10 +22,10 @@ function(jQuery, DesignTimeMetadata, AggregationDesignTimeMetadata) {
 	 *
 	 * @class
 	 * The ElementDesignTimeMetadata is a wrapper for the ElementDesignTimeMetadata of the associated element
-	 * @extends sap.ui.core.DesignTimeMetadata
+	 * @extends sap.ui.dt.DesignTimeMetadata
 	 *
 	 * @author SAP SE
-	 * @version 1.52.10
+	 * @version 1.52.11
 	 *
 	 * @constructor
 	 * @private

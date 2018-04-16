@@ -23,10 +23,10 @@ function(Plugin, DOMUtil, OverlayUtil, ElementUtil) {
 	 * @class
 	 * The DragDrop plugin is an abstract plugin to enable drag and drop functionality of the Overlays
 	 * This Plugin should be overwritten by the D&D plugin implementations, the abstract functions should be used to perform actions
-	 * @extends sap.ui.dt.plugin.Plugin
+	 * @extends sap.ui.dt.Plugin
 	 *
 	 * @author SAP SE
-	 * @version 1.52.10
+	 * @version 1.52.11
 	 *
 	 * @constructor
 	 * @private

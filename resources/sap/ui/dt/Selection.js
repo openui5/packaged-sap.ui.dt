@@ -21,10 +21,10 @@ function(ManagedObject) {
 	 * @class
 	 * The Selection allows to create a set of Overlays above the root elements and
 	 * theire public children and manage their events.
-	 * @extends sap.ui.dt.ManagedObject
+	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.52.10
+	 * @version 1.52.11
 	 *
 	 * @constructor
 	 * @private

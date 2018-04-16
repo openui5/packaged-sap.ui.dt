@@ -21,10 +21,10 @@ function (jQuery, DesignTimeMetadata) {
 	 *
 	 * @class
 	 * The AggregationDesignTimeMetadata is a wrapper for the AggregationDesignTimeMetadata of the associated element
-	 * @extends sap.ui.core.DesignTimeMetadata
+	 * @extends sap.ui.dt.DesignTimeMetadata
 	 *
 	 * @author SAP SE
-	 * @version 1.52.10
+	 * @version 1.52.11
 	 *
 	 * @constructor
 	 * @private
