@@ -21,7 +21,7 @@ function(
 	 * @class Utility functionality to work with elements, e.g. iterate through aggregations, find parents, ...
 	 *
 	 * @author SAP SE
-	 * @version 1.54.4
+	 * @version 1.54.5
 	 *
 	 * @private
 	 * @static

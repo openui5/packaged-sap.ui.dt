@@ -45,7 +45,7 @@ function(
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.54.4
+	 * @version 1.54.5
 	 *
 	 * @constructor
 	 * @private
@@ -53,7 +53,7 @@ function(
 	 * @alias sap.ui.dt.ElementOverlay
 	 * @experimental Since 1.30. This class is experimental and provides only limited functionality. Also the API might be changed in future.
 	 */
-	var ElementOverlay = Overlay.extend("sap.ui.dt.ElementOverlay", /** @lends sap.ui.dt.ElementOverlay.prototype */ {
+	var ElementOverlay = Overlay.extend("sap.ui.dt.ElementOverlay", {
 		metadata: {
 			library: "sap.ui.dt",
 			associations: {
@@ -322,18 +322,19 @@ function(
 		// Apply Overlay position first, then extra logic based on this new position
 		Overlay.prototype._setPosition.apply(this, arguments);
 
-		this._sortAggregationOverlaysInDomOrder();
+		this._sortChildren(this.getChildrenDomRef());
 
 		this.getScrollContainers().forEach(function(mScrollContainer, iIndex) {
 			// TODO: write Unit test for the case when getAssociatedDomRef() returns undefined (domRef func returns undefined)
 			var $ScrollContainerDomRef = this.getDesignTimeMetadata().getAssociatedDomRef(this.getElement(), mScrollContainer.domRef) || jQuery();
-			var $ScrollContainerOverlayDomRef = this.getScrollContainerByIndex(iIndex);
+			var $ScrollContainerOverlayDomRef = this.getScrollContainerById(iIndex);
 
 			if ($ScrollContainerDomRef.length) {
 				var oScrollContainerDomRef = $ScrollContainerDomRef.get(0);
 				this._setSize($ScrollContainerOverlayDomRef, DOMUtil.getGeometry(oScrollContainerDomRef));
 				Overlay.prototype._setPosition.call(this, $ScrollContainerOverlayDomRef, DOMUtil.getGeometry(oScrollContainerDomRef), this.$());
 				this._handleOverflowScroll(DOMUtil.getGeometry(oScrollContainerDomRef), $ScrollContainerOverlayDomRef, this);
+				this._sortChildren($ScrollContainerOverlayDomRef.get(0));
 			} else {
 				this._deleteDummyContainer($ScrollContainerOverlayDomRef);
 				$ScrollContainerOverlayDomRef.css("display", "none");
@@ -342,14 +343,14 @@ function(
 	};
 
 	/**
-	 * Sorts aggregation overlays in their visual order
+	 * Sorts children DOM Nodes in their visual order
 	 * @private
 	 */
-	ElementOverlay.prototype._sortAggregationOverlaysInDomOrder = function() {
-		// compares two aggregations domRefs and returns 1, if first aggregation should be bellow in dom order
-		var fnCompareAggregations = function(oAggregationOverlay1, oAggregationOverlay2) {
-			var oGeometry1 = oAggregationOverlay1.getGeometry();
-			var oGeometry2 = oAggregationOverlay2.getGeometry();
+	ElementOverlay.prototype._sortChildren = function(oContainer) {
+		// compares two DOM Nodes and returns 1, if first child should be bellow in dom order
+		var fnCompareChildren = function(oChild1, oChild2) {
+			var oGeometry1 = DOMUtil.getGeometry(oChild1);
+			var oGeometry2 = DOMUtil.getGeometry(oChild2);
 			var oPosition1 = oGeometry1 && oGeometry1.position;
 			var oPosition2 = oGeometry2 && oGeometry2.position;
 
@@ -375,7 +376,20 @@ function(
 					}
 				} else if (oPosition1.top === oPosition2.top) {
 					if (oPosition1.left === oPosition2.left) {
-						return 0;
+						// Give priority to smaller block by height or width
+						if (
+							oGeometry1.size.height < oGeometry2.size.height
+							|| oGeometry1.size.width < oGeometry2.size.width
+						) {
+							return -1;
+						} else if (
+							oGeometry1.size.height > oGeometry2.size.height
+							|| oGeometry1.size.width > oGeometry2.size.width
+						) {
+							return 1;
+						} else {
+							return 0;
+						}
 					} else if (oPosition1.left < oPosition2.left) {
 						return -1; // order is correct
 					} else {
@@ -401,33 +415,23 @@ function(
 			return 0;
 		};
 
-		// filter our un-rendered children, e.g. aggregations without children themselves (see AggregationOverlay@render method)
-		var aChildrenRendered = [];
-		var aChildrenRest = [];
+		// Exclude dummy scroll containers, because, e.g. in Safari, scrollbar synchronizations on ObjectPage sometimes
+		// drops into in different event loops (JS execution cycles) which leads to invalid intermediate position
+		// on the screen with following sorting. That said, sorting happens for intermediate state and then for real
+		// state of the elements in viewport once again. Thus, excluding these elements allow us to avoid 2 extra sortings.
+		var aChildren = jQuery(oContainer).find('>:not(.sapUiDtDummyScrollContainer)').toArray();
+		var aSorted = aChildren.slice().sort(fnCompareChildren);
 
-		this.getChildren().forEach(function (oChild) {
-			if (oChild.isReady()) {
-				aChildrenRendered.push(oChild);
-			} else {
-				aChildrenRest.push(oChild);
-			}
+		var bOrderChanged = aChildren.some(function(oChild, iIndex) {
+			return oChild !== aSorted[iIndex];
 		});
 
-		if (aChildrenRendered.length) {
-			var aSortedAggregationOverlays = aChildrenRendered.slice().sort(fnCompareAggregations);
+		if (bOrderChanged) {
+			var $Children = jQuery(oContainer);
 
-			var bOrderSwitched = aChildrenRendered.some(function(oOverlay, iIndex) {
-				return oOverlay.getId() !== aSortedAggregationOverlays[iIndex].getId();
-			});
-
-			if (bOrderSwitched) {
-				this.removeAllAggregation("children");
-				aSortedAggregationOverlays
-					.concat(aChildrenRest)
-					.forEach(function(oAggregationOverlay) {
-						this.addChild(oAggregationOverlay);
-					}.bind(this));
-			}
+			aSorted.forEach(function(oChild) {
+				$Children.append(oChild);
+			}, this);
 		}
 
 	};
@@ -539,12 +543,12 @@ function(
 	};
 
 	/**
-	 * Gets DOM Node of the scroll container by its index
+	 * Gets DOM Node of the scroll container by its ID
 	 * @param {number} iIndex - index of the scroll container
 	 * @return {jQuery} - returns DOM Node of scroll container by its index
 	 */
-	ElementOverlay.prototype.getScrollContainerByIndex = function (iIndex) {
-		return this._$children.find('>.' + S_SCROLLCONTAINER_CLASSNAME).eq(iIndex);
+	ElementOverlay.prototype.getScrollContainerById = function (iIndex) {
+		return jQuery(this.getChildrenDomRef()).find('>.' + S_SCROLLCONTAINER_CLASSNAME + '[data-sap-ui-dt-scrollcontainerindex="' + iIndex + '"]');
 	};
 
 	/**
@@ -674,17 +678,50 @@ function(
 	};
 
 	/**
+	 * Event handler for "childAdded" event on aggregation overlays
+	 * @param {sap.ui.base.Event} oEvent - event object
+	 */
+	ElementOverlay.prototype._onChildAdded = function (oEvent) {
+		var oAggregationOverlay = oEvent.getSource();
+		if (this.isRendered() && !oAggregationOverlay.isRendered()) {
+			this._getRenderingContainer(oAggregationOverlay).append(oAggregationOverlay.render());
+		}
+	};
+
+	/**
+	 * Gets rendering DOM Node for specified child (aggregation overlay)
+	 * @param {sap.ui.dt.AggregationOverlay} oAggregationOverlay - aggregation overlay
+	 * @return {jQuery} - jQuery object with rendering DOM Node
+	 */
+	ElementOverlay.prototype._getRenderingContainer = function (oAggregationOverlay) {
+		return (
+			Util.isInteger(oAggregationOverlay.getScrollContainerId())
+			? this.getScrollContainerById(oAggregationOverlay.getScrollContainerId())
+			: jQuery(this.getChildrenDomRef())
+		);
+	};
+
+	/**
 	 * There are cases where the aggregation overlay is not yet rendered (because it had no children)
 	 * and a new child is added to that aggregation. We then render the aggregation here.
-	 * @param {sap.ui.dt.AggregationOverlay} oTargetAggregationOverlay The aggregation overlay where the child is being added.
+	 * @param {sap.ui.dt.AggregationOverlay} oAggregationOverlay - The aggregation overlay where the child is being added.
 	 */
-	ElementOverlay.prototype.addChild = function (oTargetAggregationOverlay) {
-		oTargetAggregationOverlay.attachChildAdded(function (oEvent) {
-			var oAggregationOverlay = oEvent.getSource();
-			if (this._bRendered && !oAggregationOverlay._bRendered) {
-				this.$().find('>.sapUiDtOverlayChildren').append(oAggregationOverlay.render());
+	ElementOverlay.prototype.addChild = function (oAggregationOverlay) {
+		if (this.isRendered()) {
+			var $Target = this._getRenderingContainer(oAggregationOverlay);
+
+			// 1. Move aggregation in rendering container
+			$Target.append(oAggregationOverlay.getDomRef());
+
+			// 2. Move rendering container if it's a scroll container
+			if (Util.isInteger(oAggregationOverlay.getScrollContainerId())) {
+				jQuery(this.getChildrenDomRef()).append($Target);
 			}
-		}, this);
+		}
+
+		// Since we can't check whether the listener was attached before or not, we re-attach it to avoid multiple listeners
+		oAggregationOverlay.detachChildAdded(this._onChildAdded, this);
+		oAggregationOverlay.attachChildAdded(this._onChildAdded, this);
 
 		Overlay.prototype.addChild.apply(this, arguments);
 	};
@@ -709,9 +746,6 @@ function(
 		} else if (oEvent.getParameters().type === "setParent") {
 			this.fireElementModified(oParams);
 		}
-
-		// FIXME: applyStyles() ?
-		this.invalidate();
 	};
 
 	/**

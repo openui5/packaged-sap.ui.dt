@@ -694,7 +694,7 @@ function(
 
 			// var oApplyStylesSpy = sandbox.spy(Overlay.prototype, "applyStyles");
 
-			this.oSimpleScrollControlOverlay.getScrollContainerByIndex(0).scroll(function() {
+			this.oSimpleScrollControlOverlay.getScrollContainerById(0).scroll(function() {
 				// assert.equal(oApplyStylesSpy.callCount, 0,  "then the applyStyles Method is not called"); // due workaround for scroll event it's not true ATM
 				assert.equal(oContent1.$().offset().top, sInitialOffsetTop - 100, "Then the top offset is 100px lower");
 				assert.deepEqual(oContent1.$().offset(), oContent1Overlay.$().offset(), "Then the offset is still equal");
@@ -721,11 +721,11 @@ function(
 				assert.deepEqual(oInitialControlOffset, oInitialOverlayOffset, "Then the offset is still equal");
 				done();
 			});
-			this.oSimpleScrollControlOverlay.getScrollContainerByIndex(0).scrollTop(100);
+			this.oSimpleScrollControlOverlay.getScrollContainerById(0).scrollTop(100);
 		});
 	});
 
-	QUnit.module("Given that a DesignTime is created for a control", {
+	QUnit.module("Aggregation sorting", {
 		beforeEach : function(assert) {
 			var fnDone = assert.async();
 			var fnDone2 = assert.async();
@@ -767,6 +767,10 @@ function(
 
 			this.oDesignTime.attachEventOnce("synced", function() {
 				this.oLayoutOverlay = OverlayRegistry.getOverlay(this.oLayout);
+				this.oHeaderTitleOverlay = this.oLayoutOverlay.getAggregationOverlay("headerTitle");
+				this.oHeaderContentOverlay = this.oLayoutOverlay.getAggregationOverlay("headerContent");
+				this.oSectionsOverlay = this.oLayoutOverlay.getAggregationOverlay("sections");
+				this.oFooterOverlay = this.oLayoutOverlay.getAggregationOverlay("footer");
 				fnDone();
 			}.bind(this));
 		},
@@ -775,33 +779,49 @@ function(
 			this.oVBox.destroy();
 		}
 	}, function () {
-		// QUnit.test("when the control is rendered", function(assert) {
-		// 	var oHeaderTitleOverlay = this.oLayoutOverlay.getAggregationOverlay("headerTitle");
-		// 	var oHeaderContentOverlay = this.oLayoutOverlay.getAggregationOverlay("headerContent");
-		// 	var oSectionsOverlay = this.oLayoutOverlay.getAggregationOverlay("sections");
-		// 	var oFooterOverlay = this.oLayoutOverlay.getAggregationOverlay("footer");
-		//
-		// 	var aAggregationOverlays = this.oLayoutOverlay.getChildren();
-		// 	var iIndexHeaderTitleOverlay = aAggregationOverlays.indexOf(oHeaderTitleOverlay);
-		// 	var iIndexHeaderContentOverlay = aAggregationOverlays.indexOf(oHeaderContentOverlay);
-		// 	var iIndexSectionsOverlay = aAggregationOverlays.indexOf(oSectionsOverlay);
-		// 	var iIndexFooterOverlay = aAggregationOverlays.indexOf(oFooterOverlay);
-		//
-		// 	assert.ok(iIndexHeaderTitleOverlay < iIndexHeaderContentOverlay, "then the overlay for headerTitle is above headerContent");
-		// 	assert.ok(iIndexHeaderContentOverlay < iIndexSectionsOverlay, "then the overlay for headerContent is above sections");
-		// 	assert.ok(iIndexSectionsOverlay < iIndexFooterOverlay, "then the overlay for sections is above footer");
-		//
-		// 	var $AggregationOverlays = jQuery(this.oLayoutOverlay.$().children()[1]).children();
-		// 	assert.equal($AggregationOverlays.get(1).className, "sapUiDtOverlayScrollContainer", "then a scrollContainer is second in DOM");
-		// 	var $scrollContainerChildren = jQuery($AggregationOverlays.get(1)).children();
-		// 	assert.equal($AggregationOverlays.get(2).className, "sapUiDtOverlayScrollContainer", "then a scrollContainer is third in DOM");
-		//
-		// 	assert.equal($AggregationOverlays.get(0).dataset["sapUiDtAggregation"], "headerTitle", "then the overlay for headerTitle is first in DOM");
-		// 	assert.equal($scrollContainerChildren.get(0).dataset["sapUiDtAggregation"], "headerContent", "then the overlay for headerContent is first in the first ScrollContainer in DOM");
-		// 	assert.equal($scrollContainerChildren.get(1).dataset["sapUiDtAggregation"], "sections", "then the overlay for headerContent is second in the first ScrollContainer in DOM");
-		// 	assert.equal($AggregationOverlays.get(3).dataset["sapUiDtAggregation"], "footer", "then the overlay for headerTitle is fourth in DOM");
-		// });
+		QUnit.test("check position in DOM tree", function (assert) {
+			var a$Children = jQuery(this.oLayoutOverlay.getChildrenDomRef()).find('>');
+			var $ScrollContainer = this.oLayoutOverlay.getScrollContainerById(this.oHeaderContentOverlay.getScrollContainerId());
+			var a$ScrollContainerChildren = $ScrollContainer.find('>');
 
+			var iIndexHeaderTitleOverlay = a$Children.index(this.oHeaderTitleOverlay.getDomRef());
+			var iScrollcontainer = a$Children.index($ScrollContainer);
+			var iIndexFooterOverlay = a$Children.index(this.oFooterOverlay.getDomRef());
+			var iIndexHeaderContentOverlay = a$ScrollContainerChildren.index(this.oHeaderContentOverlay.getDomRef());
+			var iIndexSectionsOverlay = a$ScrollContainerChildren.index(this.oSectionsOverlay.getDomRef());
+
+			assert.ok(iIndexHeaderTitleOverlay < iScrollcontainer, "then the overlay for headerTitle is above scrollcontainer");
+			assert.ok(iScrollcontainer < iIndexFooterOverlay, "then the scrollcontainer is above the overlay for headerTitle");
+			assert.ok(iIndexHeaderContentOverlay < iIndexSectionsOverlay, "then the overlay for headerContent is above the overlay for sections");
+		});
+		QUnit.test("check whether scrollbar position doesn't affect sorting", function (assert) {
+			var fnDone = assert.async();
+
+			var a$Children = jQuery(this.oLayoutOverlay.getChildrenDomRef()).find('>');
+			var $ScrollContainer = this.oLayoutOverlay.getScrollContainerById(this.oHeaderContentOverlay.getScrollContainerId());
+			var a$ScrollContainerChildren = $ScrollContainer.find('>');
+
+			var iIndexHeaderTitleOverlay = a$Children.index(this.oHeaderTitleOverlay.getDomRef());
+			var iScrollcontainer = a$Children.index($ScrollContainer);
+			var iIndexFooterOverlay = a$Children.index(this.oFooterOverlay.getDomRef());
+			var iIndexHeaderContentOverlay = a$ScrollContainerChildren.index(this.oHeaderContentOverlay.getDomRef());
+			var iIndexSectionsOverlay = a$ScrollContainerChildren.index(this.oSectionsOverlay.getDomRef());
+
+			// FIXME: remove timeout when #1870203056 is implemented
+			setTimeout(function () {
+				var a$Children = jQuery(this.oLayoutOverlay.getChildrenDomRef()).find('>');
+				var a$ScrollContainerChildren = $ScrollContainer.find('>');
+
+				assert.strictEqual(a$Children.index(this.oHeaderTitleOverlay.getDomRef()), iIndexHeaderTitleOverlay);
+				assert.strictEqual(a$Children.index($ScrollContainer), iScrollcontainer);
+				assert.strictEqual(a$Children.index(this.oFooterOverlay.getDomRef()), iIndexFooterOverlay);
+				assert.strictEqual(a$ScrollContainerChildren.index(this.oHeaderContentOverlay.getDomRef()), iIndexHeaderContentOverlay);
+				assert.strictEqual(a$ScrollContainerChildren.index(this.oSectionsOverlay.getDomRef()), iIndexSectionsOverlay);
+				fnDone();
+			}.bind(this));
+
+			$ScrollContainer.scrollTop(300);
+		});
 	});
 
 	QUnit.module("Given another SimpleScrollControl with Overlays and one scroll container aggregation is ignored", {
