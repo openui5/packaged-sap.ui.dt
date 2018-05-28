@@ -106,4 +106,4 @@
 /* ============================== */
 
 /* Inline theming parameters */
-#sap-ui-theme-sap\.ui\.dt { background-image: url('data:text/plain;utf-8,%7B%22_sap_ui_dt_Overlay_FocusColor%22:%22rgba%28255, 255, 255, 0.8%29%22,%22_sap_ui_dt_Overlay_TargetZoneColor%22:%22#00ff00%22,%22_sap_ui_dt_Overlay_SelectionColor%22:%22#ffffff%22,%22_sap_ui_dt_Overlay_CuttedColor%22:%22#555555%22%7D'); }
+#sap-ui-theme-sap\.ui\.dt { background-image: url('data:text/plain;utf-8,%7B%22_sap_ui_dt_Overlay_FocusColor%22:%22rgba%28255, 255, 255, 0.8%29%22,%22_sap_ui_dt_Overlay_TargetZoneColor%22:%22%2300ff00%22,%22_sap_ui_dt_Overlay_SelectionColor%22:%22%23ffffff%22,%22_sap_ui_dt_Overlay_CuttedColor%22:%22%23555555%22%7D'); }
