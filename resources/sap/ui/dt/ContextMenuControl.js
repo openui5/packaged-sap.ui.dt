@@ -36,7 +36,7 @@ sap.ui.define([
 	 * @class A simple ContextMenu.
 	 * @extends sap.ui.core.Control
 	 * @author SAP SE
-	 * @version 1.56.0
+	 * @version 1.56.1
 	 * @constructor
 	 * @private
 	 * @experimental
@@ -483,16 +483,20 @@ sap.ui.define([
 
 			this.getPopover().setPlacement("Bottom");
 
-			var oPos = {};
+			var oPos = {},
+				iRtaToolbarHeight = jQuery(".sapUiRtaToolbar").height(),
+				iViewportTop = iRtaToolbarHeight ? iRtaToolbarHeight : oViewport.top,
+				iViewportHeight = iRtaToolbarHeight ? oViewport.height - iRtaToolbarHeight : oViewport.height;
 
 			oPos.left = oOverlay.left + oOverlay.width / 2;
 
-			if ((oOverlay.height < 60 || oOverlay.isOverlappedAtTop) && oViewport.height - oOverlay.top - oOverlay.height >= oPopover.height) {
+			if ((oOverlay.height < 60 || oOverlay.isOverlappedAtTop) && iViewportHeight - oOverlay.top - oOverlay.height >= oPopover.height) {
 				oPos.top = oOverlay.bottom;
-			} else if (oOverlay.top >= oViewport.top) {
+			} else if (oOverlay.top >= iViewportTop) {
 				oPos.top = oOverlay.top + 5;
 			} else {
-				oPos.top = oViewport.top + 5;
+				// position on top of the viewport but below the RTAToolbar
+				oPos.top = iViewportTop + 5;
 			}
 			return oPos;
 		},
@@ -622,7 +626,7 @@ sap.ui.define([
 			this._iFirstVisibleButtonIndex = null;
 
 			if (bExpanded) {
-				oPopover.height *= this.getButtons().length - 1;
+				oPopover.height *= this.getButtons().length;
 				oPopover.width = parseInt(jQuery("#" + this.getPopover().getId()).css("width"), 10) || 80;
 			} else {
 				oPopover.width = iBaseFontsize * fButtonWidth * this._iButtonsVisible;

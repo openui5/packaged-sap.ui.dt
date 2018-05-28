@@ -24,7 +24,7 @@ function(
 	 * Utility functionality for DOM
 	 *
 	 * @author SAP SE
-	 * @version 1.56.0
+	 * @version 1.56.1
 	 *
 	 * @private
 	 * @static
@@ -446,6 +446,19 @@ function(
 	DOMUtil.contains = function (sId, oTargetNode) {
 		var oNode = document.getElementById(sId);
 		return oNode && oNode.contains(oTargetNode);
+	};
+
+	/**
+	 * Safely append child node to specified target node with persistent state of scrollTop/scrollLeft
+	 * @param {HTMLElement} oTargetNode - Target node to whom child has to be appended
+	 * @param {HTMLElement} oChildNode - Child node to be appended to specified target
+	 */
+	DOMUtil.appendChild = function (oTargetNode, oChildNode) {
+		var iScrollTop = oChildNode.scrollTop;
+		var iScrollLeft = oChildNode.scrollLeft;
+		oTargetNode.appendChild(oChildNode);
+		oChildNode.scrollTop = iScrollTop;
+		oChildNode.scrollLeft = iScrollLeft;
 	};
 
 	return DOMUtil;

@@ -45,7 +45,7 @@ function(
 	 * @extends sap.ui.dt.Overlay
 	 *
 	 * @author SAP SE
-	 * @version 1.56.0
+	 * @version 1.56.1
 	 *
 	 * @constructor
 	 * @private
@@ -427,11 +427,9 @@ function(
 		});
 
 		if (bOrderChanged) {
-			var $Children = jQuery(oContainer);
-
 			aSorted.forEach(function(oChild) {
-				$Children.append(oChild);
-			}, this);
+				DOMUtil.appendChild(oContainer, oChild);
+			});
 		}
 
 	};
