@@ -36,7 +36,7 @@ sap.ui.define([
 	 * @class A simple ContextMenu.
 	 * @extends sap.ui.core.Control
 	 * @author SAP SE
-	 * @version 1.56.1
+	 * @version 1.56.2
 	 * @constructor
 	 * @private
 	 * @experimental
@@ -787,7 +787,7 @@ sap.ui.define([
 		},
 
 		_addButton: function (sButtonItemId, oButtonOptions) {
-			this.setProperty("buttons", this.getProperty("buttons").concat(oButtonOptions));
+			this.setProperty("buttons", this.getProperty("buttons").concat(oButtonOptions), true);
 
 			var oButtonCustomData = { id: sButtonItemId, key: sButtonItemId };
 			var oExpandedMenuButton = new Button(oButtonOptions);
@@ -820,7 +820,7 @@ sap.ui.define([
 
 				// deletes the overflow button if there is one
 				if (this.getProperty("buttons").length > this.getProperty("maxButtonsDisplayed")) {
-					this.setProperty("buttons", this.getProperty("buttons").splice(0, this.getProperty("buttons").length - 1));
+					this.setProperty("buttons", this.getProperty("buttons").splice(0, this.getProperty("buttons").length - 1), true);
 
 					this.getFlexbox().removeItem(this.getButtons().length - 1);
 				}
@@ -836,7 +836,7 @@ sap.ui.define([
 		 * @public
 		 */
 		removeButton: function (iIndex) {
-			this.setProperty("buttons", this.getProperty("buttons").splice(iIndex, 1));
+			this.setProperty("buttons", this.getProperty("buttons").splice(iIndex, 1), true);
 
 			this.getFlexbox(true).removeItem(iIndex);
 			return this.getFlexbox(false).removeItem(iIndex);
@@ -848,7 +848,7 @@ sap.ui.define([
 		 * @public
 		 */
 		removeAllButtons: function () {
-			this.setProperty("buttons", []);
+			this.setProperty("buttons", [], true);
 			this.getFlexbox(true).removeAllItems();
 			return this.getFlexbox(false).removeAllItems();
 		},
@@ -898,7 +898,7 @@ sap.ui.define([
 			if (iMBD < 2) {
 				throw Error("maxButtonsDisplayed can't be less than two!");
 			}
-			this.setProperty("maxButtonsDisplayed", iMBD);
+			this.setProperty("maxButtonsDisplayed", iMBD, true);
 		},
 
 		/**
@@ -1108,7 +1108,11 @@ sap.ui.define([
 			this.fireOpened();
 		},
 
-		renderer: function () {}
+		renderer: function () {},
+
+		setStyleClass: function (sStyleClass) {
+			this.setProperty('styleClass', sStyleClass, true);
+		}
 	});
 
 	return ContextMenu;
