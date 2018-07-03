@@ -17,7 +17,7 @@ sap.ui.define([
 	 * Constructor for a Map.
 	 *
 	 * @author SAP SE
-	 * @version 1.56.2
+	 * @version 1.56.3
 	 *
 	 * @constructor
 	 * @private

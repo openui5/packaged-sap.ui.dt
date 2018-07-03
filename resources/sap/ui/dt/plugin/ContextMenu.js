@@ -26,7 +26,7 @@ sap.ui.define([
 	 * @class The ContextMenu registers event handler to open the context menu. Menu entries can dynamically be added
 	 * @extends sap.ui.dt.Plugin
 	 * @author SAP SE
-	 * @version 1.56.2
+	 * @version 1.56.3
 	 * @constructor
 	 * @private
 	 * @since 1.53
@@ -80,7 +80,7 @@ sap.ui.define([
 		if (this.oContextMenuControl) {
 			this.oContextMenuControl.detachClosed(this._contextMenuClosed, this);
 			this.oContextMenuControl.detachOverflowButtonPressed(this._pressedOverflowButton, this);
-			this.oContextMenuControl.destroy();
+			this.oContextMenuControl.destroy(true); // "true" to suppress UI static area invalidation, see BCP#1880339211
 			delete this.oContextMenuControl;
 		}
 	};
