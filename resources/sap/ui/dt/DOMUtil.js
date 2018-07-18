@@ -20,7 +20,7 @@ function(
 	 * Utility functionality for DOM
 	 *
 	 * @author SAP SE
-	 * @version 1.52.15
+	 * @version 1.52.16
 	 *
 	 * @private
 	 * @static
