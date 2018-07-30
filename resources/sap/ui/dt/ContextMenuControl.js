@@ -36,7 +36,7 @@ sap.ui.define([
 	 * @class A simple ContextMenu.
 	 * @extends sap.ui.core.Control
 	 * @author SAP SE
-	 * @version 1.56.4
+	 * @version 1.56.5
 	 * @constructor
 	 * @private
 	 * @experimental
