@@ -22,9 +22,10 @@
 	jQuery.sap.require("sap.ui.qunit.qunit-coverage");
 	QUnit.config.autostart = false;
 
-	sap.ui.define([	"sap/ui/dt/ManagedObjectObserver",
-					"sap/ui/core/Element"],
-		function(ManagedObjectObserver, Element) {
+	sap.ui.require([	"sap/ui/dt/ManagedObjectObserver",
+					"sap/ui/core/Element",
+					"sap/ui/thirdparty/sinon-4"],
+		function(ManagedObjectObserver, Element, sinon) {
 			"use strict";
 
 			QUnit.start();
@@ -53,11 +54,24 @@
 						"myAggregation": {
 							"type": "sap.ui.core.Element"
 						},
+						"myInheritedAggregation": {
+							"type": "sap.ui.core.Element"
+						},
 						"mySingleAggregation": {
 							"type": "sap.ui.core.Element",
 							"multiple": false
 						},
 						"myOverwrittenAggregation": {
+							"type": "sap.ui.core.Element"
+						}
+					}
+				}
+			});
+
+			var SmartTestObject = TestObject.extend("sap.ui.dt.SmartTestObject", {
+				metadata: {
+					aggregations: {
+						"myOriginalAggregation": {
 							"type": "sap.ui.core.Element"
 						}
 					}
@@ -71,6 +85,7 @@
 			TestObject.prototype.insertMyOverwrittenAggregation = function () {
 				//don't call the generic method as we would do something special...
 			};
+
 			TestObject.prototype.removeMyOverwrittenAggregation = function () {
 				//don't call the generic method as we would do something special...
 			};
@@ -95,20 +110,33 @@
 				//don't call the generic method as we would do something special...
 			};
 
+			SmartTestObject.prototype.insertMyOriginalAggregation = function () {
+				//don't call the generic method as we would do something special...
+				this.insertMyInheritedAggregation();
+			};
+
 			QUnit.module("Given that an ManagedObject is observed", {
 				beforeEach: function () {
 					this.oManagedObject = new TestObject();
 					this.oOtherObject = new TestObject();
+					this.oSmartManagedObject = new SmartTestObject();
 					this.oManagedObjectObserver = new ManagedObjectObserver({
 						target: this.oManagedObject,
+						destroyed: fnObserverDestroyedCalled.bind(null, assert),
+						modified: fnObserverModifiedCalled.bind(null, assert)
+					});
+					this.oSmartManagedObjectObserver = new ManagedObjectObserver({
+						target: this.oSmartManagedObject,
 						destroyed: fnObserverDestroyedCalled,
 						modified: fnObserverModifiedCalled
 					});
 				},
 				afterEach: function () {
 					this.oManagedObjectObserver.destroy();
+					this.oSmartManagedObjectObserver.destroy();
 					this.oManagedObject.destroy();
 					this.oOtherObject.destroy();
+					this.oSmartManagedObject.destroy();
 				}
 			});
 
@@ -235,6 +263,11 @@
 				});
 			}
 
+			QUnit.test("when the ManagedObject has an aggregation which serves as wrapper for a nested aggregation", function (assert) {
+				assert.expect(2);
+				this.oSmartManagedObject.insertMyOriginalAggregation();
+			});
+
 			QUnit.test("when the ManagedObject is destroyed", function (assert) {
 				assert.expect(1);
 				this.oManagedObject.destroy();
@@ -248,6 +281,18 @@
 				this.oManagedObject.destroy();
 				assert.strictEqual(oOtherManagedObjectObserver._bIsObserved, false, "then _bIsObserved flag is unset on destroying the target");
 				assert.strictEqual(this.oManagedObject.destroy, Element.prototype.destroy, "then original base functions (like destroy) are set back on destroying the target");
+			});
+
+			QUnit.test("when the event from setParent action is suppressed", function (assert) {
+				assert.expect(3);
+				var oSpy = sinon.spy();
+				this.oManagedObjectObserver.attachModified(oSpy);
+				this.oManagedObject.__bSapUiDtSupressParentChangeEvent = true;
+				this.oManagedObject.setParent(this.oOtherObject);
+				assert.ok(oSpy.notCalled);
+				this.oManagedObject.__bSapUiDtSupressParentChangeEvent = false;
+				this.oManagedObject.setParent(null);
+				assert.ok(oSpy.calledOnce);
 			});
 		});
 
