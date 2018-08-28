@@ -52,7 +52,7 @@ function (
 	 * @extends sap.ui.dt.Overlay
 	 *
 	 * @author SAP SE
-	 * @version 1.58.0
+	 * @version 1.58.1
 	 *
 	 * @constructor
 	 * @private
@@ -335,9 +335,11 @@ function (
 
 			if ($ScrollContainerDomRef.length) {
 				var oScrollContainerDomRef = $ScrollContainerDomRef.get(0);
-				this._setSize($ScrollContainerOverlayDomRef, DOMUtil.getGeometry(oScrollContainerDomRef));
-				Overlay.prototype._setPosition.call(this, $ScrollContainerOverlayDomRef, DOMUtil.getGeometry(oScrollContainerDomRef), this.$());
-				this._handleOverflowScroll(DOMUtil.getGeometry(oScrollContainerDomRef), $ScrollContainerOverlayDomRef, this);
+				var mScrollContainerGeometry = DOMUtil.getGeometry(oScrollContainerDomRef);
+				this._setSize($ScrollContainerOverlayDomRef, mScrollContainerGeometry);
+				Overlay.prototype._setPosition.call(this, $ScrollContainerOverlayDomRef, mScrollContainerGeometry, this.$());
+				this._handleOverflowScroll(mScrollContainerGeometry, $ScrollContainerOverlayDomRef, this);
+				this._setZIndex(mScrollContainerGeometry, $ScrollContainerOverlayDomRef);
 			} else {
 				this._deleteDummyContainer($ScrollContainerOverlayDomRef);
 				$ScrollContainerOverlayDomRef.css("display", "none");

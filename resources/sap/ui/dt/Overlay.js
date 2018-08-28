@@ -15,7 +15,7 @@ sap.ui.define([
 	'sap/ui/dt/ScrollbarSynchronizer',
 	'sap/ui/dt/Util',
 	'sap/base/Log',
-	'sap/ui/core/Popup'
+	'sap/ui/dt/util/getNextZIndex'
 ],
 function (
 	jQuery,
@@ -27,7 +27,7 @@ function (
 	ScrollbarSynchronizer,
 	Util,
 	Log,
-	Popup
+	getNextZIndex
 ) {
 	"use strict";
 
@@ -46,7 +46,7 @@ function (
 	 * @extends sap.ui.core.Element
 	 *
 	 * @author SAP SE
-	 * @version 1.58.0
+	 * @version 1.58.1
 	 *
 	 * @constructor
 	 * @private
@@ -616,7 +616,7 @@ function (
 		if (Util.isInteger(iZIndex)) {
 			$overlayDomRef.css("z-index", iZIndex);
 		} else if (this.isRoot()) {
-			this._iZIndex = this._iZIndex || Popup.getNextZIndex();
+			this._iZIndex = this._iZIndex || getNextZIndex();
 			$overlayDomRef.css("z-index", this._iZIndex);
 		}
 	};
