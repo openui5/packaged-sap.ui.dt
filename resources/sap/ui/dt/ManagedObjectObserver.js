@@ -18,7 +18,7 @@ sap.ui.define([
 	 * @class The ManagedObjectObserver observes changes of a ManagedObject and propagates them via events.
 	 * @extends sap.ui.base.ManagedObject
 	 * @author SAP SE
-	 * @version 1.52.17
+	 * @version 1.52.18
 	 * @constructor
 	 * @private
 	 * @since 1.30
@@ -183,10 +183,16 @@ sap.ui.define([
 
 			var oCurrentParent = oTarget.getParent();
 			var vOriginalReturn = this._fnOriginalSetParent.apply(oTarget, arguments);
-			if (bFireModified && !oTarget.__bSapUiDtSupressParentChangeEvent) {
+			if (bFireModified) {
 				oTarget._bInSetParent = false;
-				// "dependents" is used to store some removed elements (e.g. from Combine)
-				if (oCurrentParent !== oParent || sAggregationName === "dependents") {
+				if (
+					!oTarget.__bSapUiDtSupressParentChangeEvent
+					&& (
+						oCurrentParent !== oParent
+						// "dependents" is used to store some removed elements (e.g. from Combine)
+						|| sAggregationName === "dependents"
+					)
+				) {
 					this.fireModified({
 						type: "setParent",
 						value: oParent,
