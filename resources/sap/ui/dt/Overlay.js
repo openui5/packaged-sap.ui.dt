@@ -46,7 +46,7 @@ function (
 	 * @extends sap.ui.core.Element
 	 *
 	 * @author SAP SE
-	 * @version 1.58.1
+	 * @version 1.58.2
 	 *
 	 * @constructor
 	 * @private
@@ -214,6 +214,14 @@ function (
 						error: oError
 					});
 				}.bind(this));
+
+			// Attach stored browser events
+			this.attachEventOnce('afterRendering', function (oEvent) {
+				var $DomRef = jQuery(oEvent.getParameter('domRef'));
+				this._aBindParameters.forEach(function (mBrowserEvent) {
+					$DomRef.on(mBrowserEvent.sEventType, mBrowserEvent.fnProxy);
+				});
+			}, this);
 		},
 
 		/**
@@ -670,7 +678,7 @@ function (
 				});
 
 				// if control is rendered, directly call bind()
-				this.$().bind(sEventType, fnProxy);
+				this.$().on(sEventType, fnProxy);
 			}
 		}
 
