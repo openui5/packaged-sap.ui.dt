@@ -49,7 +49,7 @@ function(
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.56.7
+	 * @version 1.56.10
 	 *
 	 * @constructor
 	 * @private
@@ -227,7 +227,7 @@ function(
 
 					// TODO: move to overlay
 					if (bValue) {
-						oRootElementOverlay.applyStyles();
+						oRootElementOverlay.applyStyles(/*bForceScrollbarSync = */true);
 					}
 				});
 			}, this);

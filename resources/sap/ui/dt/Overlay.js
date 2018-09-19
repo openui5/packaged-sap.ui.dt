@@ -14,8 +14,7 @@ sap.ui.define([
 	'sap/ui/dt/DOMUtil',
 	'sap/ui/dt/ScrollbarSynchronizer',
 	'sap/ui/dt/Util',
-	'sap/ui/dt/Map',
-	'sap/ui/Device'
+	'sap/ui/dt/Map'
 ],
 function(
 	jQuery,
@@ -26,8 +25,7 @@ function(
 	DOMUtil,
 	ScrollbarSynchronizer,
 	Util,
-	Map,
-	Device
+	Map
 ) {
 	"use strict";
 
@@ -46,7 +44,7 @@ function(
 	 * @extends sap.ui.core.Element
 	 *
 	 * @author SAP SE
-	 * @version 1.56.7
+	 * @version 1.56.10
 	 *
 	 * @constructor
 	 * @private
@@ -541,9 +539,10 @@ function(
 	 * Calculate and update CSS styles for the Overlay's DOM
 	 * The calculation is based on original associated DOM state and parent overlays
 	 * This method also calls "applyStyles" method for every child Overlay of this Overlay (cascade)
+	 * @param {boolean} bForceScrollbarSync - `true` to force a scrollbars synchronisation if there are any
 	 * @public
 	 */
-	Overlay.prototype.applyStyles = function() {
+	Overlay.prototype.applyStyles = function (bForceScrollbarSync) {
 		if (!this.isRendered()) {
 			return;
 		}
@@ -568,14 +567,14 @@ function(
 					});
 					if (aPromises.length) {
 						Promise.all(aPromises).then(function () {
-							this._applySizes(oGeometry, $RenderingParent);
+							this._applySizes(oGeometry, $RenderingParent, bForceScrollbarSync);
 							this.fireGeometryChanged();
 						}.bind(this));
 					} else {
-						this._applySizes(oGeometry, $RenderingParent);
+						this._applySizes(oGeometry, $RenderingParent, bForceScrollbarSync);
 					}
 				} else {
-					this._applySizes(oGeometry, $RenderingParent);
+					this._applySizes(oGeometry, $RenderingParent, bForceScrollbarSync);
 				}
 
 			} else {
@@ -591,14 +590,14 @@ function(
 		}
 	};
 
-	Overlay.prototype._applySizes = function (oGeometry, $RenderingParent) {
-		this._setPosition(this.$(), oGeometry, $RenderingParent);
+	Overlay.prototype._applySizes = function (oGeometry, $RenderingParent, bForceScrollbarSync) {
+		this._setPosition(this.$(), oGeometry, $RenderingParent, bForceScrollbarSync);
 		if (oGeometry.domRef) {
-			this._handleOverflowScroll(oGeometry, this.$(), this.getParent());
+			this._handleOverflowScroll(oGeometry, this.$(), this.getParent(), bForceScrollbarSync);
 		}
 
 		this.getChildren().forEach(function(oChild) {
-			oChild.applyStyles();
+			oChild.applyStyles(bForceScrollbarSync);
 		});
 	};
 
@@ -723,7 +722,7 @@ function(
 	 * Handle overflow from controls and sync with overlay
 	 * @private
 	 */
-	Overlay.prototype._handleOverflowScroll = function(oGeometry, $overlayDomRef, oOverlayParent) {
+	Overlay.prototype._handleOverflowScroll = function(oGeometry, $overlayDomRef, oOverlayParent, bForceScrollbarSync) {
 		var oOriginalDomRef = oGeometry.domRef;
 		var mSize = oGeometry.size;
 		var iZIndex = DOMUtil.getZIndex(oOriginalDomRef);
@@ -777,6 +776,10 @@ function(
 				if (!oScrollbarSynchronizer.hasTarget(oOriginalDomRef)) {
 					oScrollbarSynchronizer.addTarget(oOriginalDomRef);
 				}
+			}
+
+			if (bForceScrollbarSync) {
+				oScrollbarSynchronizer.sync(oOriginalDomRef, true);
 			}
 		} else {
 			this._deleteDummyContainer($overlayDomRef);
