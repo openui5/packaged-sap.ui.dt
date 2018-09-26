@@ -18,7 +18,7 @@ function(jQuery) {
 	 * Utility functionality to work with élements, e.g. iterate through aggregations, find parents, ...
 	 *
 	 * @author SAP SE
-	 * @version 1.44.35
+	 * @version 1.44.36
 	 *
 	 * @private
 	 * @static
