@@ -32,7 +32,7 @@ sap.ui.define([
 	 * @class The ContextMenu registers event handler to open the context menu. Menu entries can dynamically be added
 	 * @extends sap.ui.dt.Plugin
 	 * @author SAP SE
-	 * @version 1.58.2
+	 * @version 1.58.3
 	 * @constructor
 	 * @private
 	 * @since 1.53
@@ -169,6 +169,8 @@ sap.ui.define([
 				this._aPluginsWithBusyFunction.push(oPlugin);
 			}
 		}.bind(this));
+
+		this.getDesignTime().getSelectionManager().attachChange(this._onSelectionChanged, this);
 
 		var aSelectedOverlays = this.getSelectedOverlays().filter(function (oElementOverlay) {
 			return oElementOverlay !== oOverlay;
@@ -485,7 +487,6 @@ sap.ui.define([
 	 * Called when overflow button is pressed on ContextMenu
 	 */
 	ContextMenu.prototype._pressedOverflowButton = function () {
-
 		this.lockMenuOpening();
 		this.setFocusLock(true);
 	};
@@ -496,6 +497,14 @@ sap.ui.define([
 	ContextMenu.prototype._contextMenuClosed = function () {
 		this.unlockMenuOpening();
 		this.setFocusLock(false);
+	};
+
+	/**
+	 * Called when the selection changes
+	 */
+	ContextMenu.prototype._onSelectionChanged = function() {
+		this.oContextMenuControl.close();
+		this.getDesignTime().getSelectionManager().detachChange(this._onSelectionChanged, this);
 	};
 
 	/**

@@ -52,7 +52,7 @@ function (
 	 * @extends sap.ui.dt.Overlay
 	 *
 	 * @author SAP SE
-	 * @version 1.58.2
+	 * @version 1.58.3
 	 *
 	 * @constructor
 	 * @private
@@ -324,7 +324,7 @@ function (
 	/**
 	 * @override
 	 */
-	ElementOverlay.prototype._setPosition = function() {
+	ElementOverlay.prototype._setPosition = function($Target, oGeometry, $Parent, bForceScrollbarSync) {
 		// Apply Overlay position first, then extra logic based on this new position
 		Overlay.prototype._setPosition.apply(this, arguments);
 
@@ -338,7 +338,7 @@ function (
 				var mScrollContainerGeometry = DOMUtil.getGeometry(oScrollContainerDomRef);
 				this._setSize($ScrollContainerOverlayDomRef, mScrollContainerGeometry);
 				Overlay.prototype._setPosition.call(this, $ScrollContainerOverlayDomRef, mScrollContainerGeometry, this.$());
-				this._handleOverflowScroll(mScrollContainerGeometry, $ScrollContainerOverlayDomRef, this);
+				this._handleOverflowScroll(mScrollContainerGeometry, $ScrollContainerOverlayDomRef, this, bForceScrollbarSync);
 				this._setZIndex(mScrollContainerGeometry, $ScrollContainerOverlayDomRef);
 			} else {
 				this._deleteDummyContainer($ScrollContainerOverlayDomRef);
