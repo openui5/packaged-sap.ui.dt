@@ -29,7 +29,7 @@ function(
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.56.10
+	 * @version 1.56.11
 	 *
 	 * @constructor
 	 * @private
@@ -232,6 +232,10 @@ function(
 		return typeof vLabel === "function"
 			? vLabel.apply(this, arguments)
 			: undefined;
+	};
+
+	DesignTimeMetadata.prototype.getControllerExtensionTemplate = function() {
+		return this.getData().controllerExtensionTemplate;
 	};
 
 	return DesignTimeMetadata;
