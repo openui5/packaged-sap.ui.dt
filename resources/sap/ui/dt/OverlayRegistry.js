@@ -19,7 +19,7 @@ function(ManagedObject, ElementUtil) {
 	 * Static registry for Overlays
 	 *
 	 * @author SAP SE
-	 * @version 1.52.19
+	 * @version 1.52.20
 	 *
 	 * @private
 	 * @static
