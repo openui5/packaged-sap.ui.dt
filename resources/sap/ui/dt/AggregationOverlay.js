@@ -25,7 +25,7 @@ function(jQuery, Overlay) {
 	 * @extends sap.ui.core.Overlay
 	 *
 	 * @author SAP SE
-	 * @version 1.44.36
+	 * @version 1.44.37
 	 *
 	 * @constructor
 	 * @private
