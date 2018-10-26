@@ -35,7 +35,7 @@ function(
 	 * @extends sap.ui.dt.Overlay
 	 *
 	 * @author SAP SE
-	 * @version 1.58.4
+	 * @version 1.58.5
 	 *
 	 * @constructor
 	 * @private
@@ -200,6 +200,18 @@ function(
 			return this.getParent().getScrollContainerById(this.getScrollContainerId());
 		} else {
 			return Overlay.prototype._getRenderingParent.apply(this, arguments);
+		}
+	};
+
+	/**
+	 * @override
+	 */
+	AggregationOverlay.prototype._setPosition = function ($Target, oGeometry, $Parent, bForceScrollbarSync) {
+		// Apply Overlay position first, then extra logic based on this new position
+		Overlay.prototype._setPosition.apply(this, arguments);
+
+		if (oGeometry.domRef) {
+			this._handleOverflowScroll(oGeometry, this.$(), this.getParent(), bForceScrollbarSync);
 		}
 	};
 
