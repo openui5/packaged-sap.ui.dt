@@ -25,7 +25,7 @@ sap.ui.define([
 	 * @class The CutPaste enables Cut & Paste functionality for the overlays based on aggregation types
 	 * @extends sap.ui.dt.Plugin
 	 * @author SAP SE
-	 * @version 1.56.13
+	 * @version 1.56.14
 	 * @constructor
 	 * @private
 	 * @since 1.34
