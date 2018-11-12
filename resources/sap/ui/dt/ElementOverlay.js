@@ -45,7 +45,7 @@ function(
 	 * @extends sap.ui.dt.Overlay
 	 *
 	 * @author SAP SE
-	 * @version 1.56.14
+	 * @version 1.56.15
 	 *
 	 * @constructor
 	 * @private
