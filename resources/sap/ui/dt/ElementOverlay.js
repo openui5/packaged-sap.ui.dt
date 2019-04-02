@@ -32,7 +32,7 @@ function(Overlay, ControlObserver, ManagedObjectObserver, ElementDesignTimeMetad
 	 * @extends sap.ui.dt.Overlay
 	 *
 	 * @author SAP SE
-	 * @version 1.52.26
+	 * @version 1.52.27
 	 *
 	 * @constructor
 	 * @private
