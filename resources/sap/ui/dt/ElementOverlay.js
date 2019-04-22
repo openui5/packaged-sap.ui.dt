@@ -32,7 +32,7 @@ function(Overlay, ControlObserver, ManagedObjectObserver, ElementDesignTimeMetad
 	 * @extends sap.ui.dt.Overlay
 	 *
 	 * @author SAP SE
-	 * @version 1.52.27
+	 * @version 1.52.28
 	 *
 	 * @constructor
 	 * @private
@@ -438,7 +438,7 @@ function(Overlay, ControlObserver, ManagedObjectObserver, ElementDesignTimeMetad
 		var oReturn = this.setAggregation("designTimeMetadata", oDesignTimeMetadata);
 
 		if (this.getElementInstance()) {
-			this._aScrollContainers = this.getDesignTimeMetadata().getScrollContainers();
+			this._aScrollContainers = this.getDesignTimeMetadata().getScrollContainers(this.getElementInstance());
 			this._renderAndCreateAggregation();
 		}
 
