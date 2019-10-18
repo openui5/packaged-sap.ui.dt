@@ -19,7 +19,7 @@ function(Element, ElementUtil) {
 	 * Static registry for Overlays
 	 *
 	 * @author SAP SE
-	 * @version 1.44.42
+	 * @version 1.44.43
 	 *
 	 * @private
 	 * @static
