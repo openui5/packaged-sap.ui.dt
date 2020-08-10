@@ -12,7 +12,7 @@ sap.ui.define(['jquery.sap.global'],
 
 	/**
 	 * @author SAP SE
-	 * @version 1.52.42
+	 * @version 1.52.43
 	 * @namespace
 	 */
 	var TableRenderer = {

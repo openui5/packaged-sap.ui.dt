@@ -26,7 +26,7 @@ function(jQuery, Test, ElementEnablementTest) {
 	 * @extends sap.ui.dt.test.Test
 	 *
 	 * @author SAP SE
-	 * @version 1.52.42
+	 * @version 1.52.43
 	 *
 	 * @constructor
 	 * @private
