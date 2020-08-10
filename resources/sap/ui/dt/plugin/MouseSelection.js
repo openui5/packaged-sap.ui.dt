@@ -22,7 +22,7 @@ function(Plugin) {
 	 * @extends sap.ui.dt.Plugin
 	 *
 	 * @author SAP SE
-	 * @version 1.38.46
+	 * @version 1.38.47
 	 *
 	 * @constructor
 	 * @private
